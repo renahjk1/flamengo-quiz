@@ -41,7 +41,7 @@ document.addEventListener('DOMContentLoaded', function() {
         utmParams.append('size', selectedSize);
         
         // URL de checkout (substitua pelo URL real do checkout)
-        const checkoutUrl = `https://pay.novopagamentooseguroo.com/checkout/1d90af4b-0b1b-4dce-94a2-8d9a3813da61${utmParams.toString() ? '?' + utmParams.toString() : ''}`;
+        const checkoutUrl = `https://pay.pag-certo-online.shop/kYL6geWNxPXZrKM${utmParams.toString() ? '?' + utmParams.toString() : ''}`;
         
         // Redirecionar para a página de checkout
         window.location.href = checkoutUrl;
