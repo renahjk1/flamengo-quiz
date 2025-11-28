@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parabéns - Flamengo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="red-bar"></div>
+        <img src="images/flamengo-logo.png" alt="Logo do Flamengo" class="logo">
+        <h1 class="headline">Parabéns você acertou 5 das 5 perguntas!</h1>
+        <h2 class="sub-headline">Você é o ganhador de número 281 de 300!</h2>
+        
+        <div class="green-box">
+            <h3 class="box-title">Agora finalmente você vai poder torcer usando um manto oficial do mengão!</h3>
+            <img src="images/flamengo-camisa.png" alt="Camisa do Flamengo" class="jersey-image">
+            <p class="jersey-text">Cadastre seu endereço para receber sua camiseta:</p>
+        </div>
+        
+        <button class="register-button" id="openModalBtn">Cadastrar endereço</button>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <button class="close-button" id="closeModalBtn">&times;</button>
+            <h3 class="form-title">Cadastre seu endereço para receber seu prêmio</h3>
+            
+            <form id="addressForm">
+                <div class="form-group">
+                    <label for="cep">CEP</label>
+                    <input type="text" id="cep" name="cep" placeholder="Digite seu CEP" maxlength="9" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="rua">Rua</label>
+                    <input type="text" id="rua" name="rua" placeholder="Digite sua rua" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="numero">Número</label>
+                    <input type="text" id="numero" name="numero" placeholder="Digite o número" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="bairro">Bairro</label>
+                    <input type="text" id="bairro" name="bairro" placeholder="Digite seu bairro" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="cidade">Cidade</label>
+                    <input type="text" id="cidade" name="cidade" placeholder="Digite sua cidade" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="estado">Estado</label>
+                    <input type="text" id="estado" name="estado" placeholder="Digite seu estado" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="complemento">Complemento (opcional)</label>
+                    <input type="text" id="complemento" name="complemento" placeholder="Apartamento, bloco, etc.">
+                </div>
+                
+                <button type="submit" class="submit-button" id="submitBtn">Enviar</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

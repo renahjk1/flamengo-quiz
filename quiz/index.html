@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz do Flamengo</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #dc2626, #000000);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .quiz-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            width: 80px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .question-number {
+            color: #dc2626;
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .question-text {
+            color: #374151;
+            font-size: 16px;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .question-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .option-button {
+            background: #f3f4f6;
+            border: none;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #374151;
+        }
+
+        .option-button:hover {
+            background: #e5e7eb;
+            transform: translateY(-2px);
+        }
+
+        .option-button.correct {
+            background: #10b981;
+            color: white;
+        }
+
+        .option-button.incorrect {
+            background: #ef4444;
+            color: white;
+        }
+
+        .option-button:disabled {
+            cursor: not-allowed;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            border: 2px solid #ef4444;
+            color: #dc2626;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            font-weight: 500;
+        }
+
+        .progress-container {
+            margin-top: 25px;
+        }
+
+        .progress-text {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #dc2626;
+            transition: width 0.5s ease;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 480px) {
+            .quiz-container {
+                padding: 30px 20px;
+            }
+            
+            .question-number {
+                font-size: 18px;
+            }
+            
+            .question-text {
+                font-size: 14px;
+            }
+            
+            .logo {
+                width: 60px;
+            }
+            
+            .question-image {
+                height: 150px;
+            }
+            
+            .option-button {
+                padding: 12px 15px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <img src="flamengo-logo.webp" alt="Logo do Flamengo" class="logo">
+        
+        <div class="question-number" id="questionNumber">Pergunta #1</div>
+        
+        <div class="question-text" id="questionText">Em que ano foi fundado o Clube de Regatas do Flamengo?</div>
+        
+        <img src="flamengo-logo.webp" alt="Imagem da pergunta" class="question-image" id="questionImage">
+        
+        <div class="options" id="optionsContainer">
+            <button class="option-button" onclick="selectAnswer(0)">1895</button>
+            <button class="option-button" onclick="selectAnswer(1)">1900</button>
+            <button class="option-button" onclick="selectAnswer(2)">1881</button>
+        </div>
+        
+        <div class="error-message" id="errorMessage" style="display: none;">
+            Resposta incorreta! Tente novamente.
+        </div>
+        
+        <div class="progress-container">
+            <div class="progress-text" id="progressText">1 de 5</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 20%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                id: 1,
+                question: "Em que ano foi fundado o Clube de Regatas do Flamengo?",
+                image: "fundacao.webp",
+                options: ["1895", "1900", "1881"],
+                correct: 0
+            },
+            {
+                id: 2,
+                question: "Qual é o estádio onde o Flamengo manda seus jogos principais?",
+                image: "estadio1.jpg",
+                options: ["Estádio da Gávea", "Maracanã", "São Januário"],
+                correct: 1
+            },
+            {
+                id: 3,
+                question: "Quem é considerado o maior ídolo da história do Flamengo?",
+                image: "jogadores1.jpg",
+                options: ["Romário", "Zico", "Adriano"],
+                correct: 1
+            },
+            {
+                id: 4,
+                question: "Quantas vezes o Flamengo foi campeão da Libertadores?",
+                image: "jogadores2.jpg",
+                options: ["2 vezes", "3 vezes", "4 vezes"],
+                correct: 1
+            },
+            {
+                id: 5,
+                question: "Qual é o apelido mais famoso do Flamengo?",
+                image: "flamengo-logo.webp",
+                options: ["Mengão", "Rubro-Negro", "Urubu"],
+                correct: 0
+            }
+        ];
+
+        let currentQuestion = 0;
+        let selectedAnswer = null;
+
+        function loadQuestion() {
+            const question = quizData[currentQuestion];
+            
+            document.getElementById('questionNumber').textContent = `Pergunta #${question.id}`;
+            document.getElementById('questionText').textContent = question.question;
+            document.getElementById('questionImage').src = question.image;
+            document.getElementById('progressText').textContent = `${currentQuestion + 1} de ${quizData.length}`;
+            document.getElementById('progressFill').style.width = `${((currentQuestion + 1) / quizData.length) * 100}%`;
+            
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = '';
+            
+            question.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'option-button';
+                button.textContent = option;
+                button.onclick = () => selectAnswer(index);
+                optionsContainer.appendChild(button);
+            });
+            
+            document.getElementById('errorMessage').style.display = 'none';
+            selectedAnswer = null;
+        }
+
+        function selectAnswer(answerIndex) {
+            if (selectedAnswer !== null) return;
+            
+            selectedAnswer = answerIndex;
+            const buttons = document.querySelectorAll('.option-button');
+            const correctAnswer = quizData[currentQuestion].correct;
+            
+            buttons.forEach(button => button.disabled = true);
+            
+            if (answerIndex === correctAnswer) {
+                buttons[answerIndex].classList.add('correct');
+                setTimeout(() => {
+                    if (currentQuestion < quizData.length - 1) {
+                        currentQuestion++;
+                        loadQuestion();
+                        buttons.forEach(button => button.disabled = false);
+                    } else {
+                        // Quiz completo - redirecionar
+                        const queryString = window.location.search; // Get the entire query string
+                        const baseUrl = "/loading/index.html";
+                        const redirectUrl = baseUrl + queryString;
+                        window.location.href = redirectUrl;
+                    }
+                }, 1000);
+            } else {
+                buttons[answerIndex].classList.add('incorrect');
+                document.getElementById('errorMessage').style.display = 'block';
+                setTimeout(() => {
+                    buttons[answerIndex].classList.remove('incorrect');
+                    buttons.forEach(button => button.disabled = false);
+                    document.getElementById('errorMessage').style.display = 'none';
+                    selectedAnswer = null;
+                }, 2000);
+            }
+        }
+
+        // Carregar primeira pergunta
+        loadQuestion();
+    </script>
+</body>
+</html>
+

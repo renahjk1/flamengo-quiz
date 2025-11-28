@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nota Fiscal - Flamengo</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <div class="red-bar"></div>
+        <img src="images/flamengo-logo.png" alt="Logo do Flamengo" class="logo">
+        
+        <h1 class="headline">NOTA FISCAL - FLAMENGO</h1>
+        <h2 class="sub-headline">Confira os impostos fiscais</h2>
+        
+        <div class="fiscal-text">
+            <p>O Flamengo precisa emitir uma nota fiscal para o seu CPF no valor original de venda da camiseta de R$359,90 e em caso de doação os impostos fica por conta do comprador.</p>
+            
+            <p>Precisamos repassar esse valor para você para podermos continuar com a entrega, visto que na LEI pede ao comprador arcar com o valor dos impostos (nesse caso de 7%).</p>
+        </div>
+        
+        <div class="tax-calculation">
+            <div class="calculation-row">
+                <span>Valor da camiseta:</span>
+                <span>R$359,90</span>
+            </div>
+            <div class="calculation-row">
+                <span>Taxa de imposto:</span>
+                <span>7%</span>
+            </div>
+            <div class="calculation-row result">
+                <span>Valor do imposto:</span>
+                <span>R$25,19</span>
+            </div>
+        </div>
+        
+        <button class="pay-button" id="payButton">PAGAR TAXA</button>
+        
+        <div class="red-bar bottom-bar"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

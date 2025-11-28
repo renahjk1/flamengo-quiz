@@ -1,0 +1,14 @@
+{
+  "name": "flamengo-quiz",
+  "version": "1.0.0",
+  "description": "Quiz do Flamengo - Site estático HTML",
+  "scripts": {
+    "start": "npx http-server -p $PORT"
+  },
+  "keywords": ["flamengo", "quiz", "html"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "http-server": "^14.1.1"
+  }
+}

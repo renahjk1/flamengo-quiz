@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Status do Pedido - Flamengo</title>
+    <style>
+        :root {
+            --red-flamengo: #e52b2b;
+            --black: #000000;
+            --white: #ffffff;
+            --light-gray: #f4f4f4;
+            --dark-gray: #333333;
+            --success: #4CAF50;
+            --warning: #FFC107;
+            --error: #F44336;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --font-primary: 'Roboto', 'Helvetica Neue', sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-primary);
+            background-color: var(--light-gray);
+            color: var(--dark-gray);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Fundo com listras sutis */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                rgba(229, 43, 43, 0.03),
+                rgba(229, 43, 43, 0.03) 10px,
+                rgba(0, 0, 0, 0.03) 10px,
+                rgba(0, 0, 0, 0.03) 20px
+            );
+            z-index: -1;
+        }
+
+        .logo-container {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .logo {
+            max-width: 120px;
+            height: auto;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: var(--red-flamengo);
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .main-container {
+            background-color: var(--white);
+            border-radius: 12px;
+            box-shadow: 0 8px 24px var(--shadow);
+            width: 100%;
+            max-width: 500px;
+            padding: 25px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Barra superior vermelha */
+        .main-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background-color: var(--red-flamengo);
+        }
+
+        .step {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            padding: 16px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            transition: all 0.4s ease;
+            position: relative;
+        }
+
+        .step:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            margin-right: 15px;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .step-content {
+            flex-grow: 1;
+        }
+
+        .step-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+            color: var(--dark-gray);
+        }
+
+        .step-message {
+            font-size: 0.95rem;
+            color: #666;
+        }
+
+        /* Status Styles */
+        .step.completed {
+            border-left: 5px solid var(--success);
+            background-color: rgba(76, 175, 80, 0.05);
+        }
+        .step.completed .step-icon {
+            background-color: var(--success);
+            color: var(--white);
+        }
+
+        .step.loading {
+            border-left: 5px solid var(--warning);
+            background-color: rgba(255, 193, 7, 0.05);
+        }
+        .step.loading .step-icon {
+            background-color: var(--warning);
+            color: var(--white);
+            animation: spin 1.2s linear infinite;
+        }
+
+        .step.error {
+            border-left: 5px solid var(--error);
+            background-color: rgba(244, 67, 54, 0.05);
+        }
+        .step.error .step-icon {
+            background-color: var(--error);
+            color: var(--white);
+        }
+        .step.error .step-title {
+            color: var(--error);
+        }
+
+        .step.not-started {
+            border-left: 5px solid #ccc;
+            background-color: rgba(204, 204, 204, 0.05);
+            opacity: 0.7;
+        }
+        .step.not-started .step-icon {
+            background-color: #ccc;
+            color: var(--white);
+        }
+
+        .redirect-message {
+            margin-top: 25px;
+            padding: 15px;
+            background-color: rgba(25, 118, 210, 0.08);
+            border: 1px solid rgba(25, 118, 210, 0.2);
+            border-radius: 8px;
+            color: #1976d2;
+            font-size: 0.95rem;
+            text-align: center;
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .info-message {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+            max-width: 500px;
+            line-height: 1.5;
+        }
+
+        .highlight {
+            color: var(--red-flamengo);
+            font-weight: 600;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(244, 67, 54, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(244, 67, 54, 0); }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            .main-container {
+                padding: 20px 15px;
+            }
+            .step {
+                padding: 12px;
+            }
+            .step-icon {
+                width: 30px;
+                height: 30px;
+                font-size: 1rem;
+                margin-right: 12px;
+            }
+            .step-title {
+                font-size: 1rem;
+            }
+            .step-message {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="logo-container">
+        <img src="img/fla-logo.png" alt="Flamengo" class="logo">
+        <h1>Status do Pedido</h1>
+    </div>
+
+    <div class="main-container">
+        <!-- Etapa 1: Pagamento de Frete (Concluída) -->
+        <div id="step1" class="step completed">
+            <div class="step-icon">✓</div>
+            <div class="step-content">
+                <div class="step-title">Pagamento de Frete</div>
+                <div class="step-message">Seu pagamento de frete foi processado com sucesso.</div>
+            </div>
+        </div>
+
+        <!-- Etapa 2: Cálculo do Frete (Inicialmente loading, depois erro surpresa) -->
+        <div id="step2" class="step not-started">
+            <div class="step-icon">⟳</div>
+            <div class="step-content">
+                <div class="step-title" id="step2-title">Cálculo do Frete</div>
+                <div class="step-message" id="step2-message">Aguardando processamento...</div>
+            </div>
+        </div>
+
+        <!-- Etapa 3: Entrega (Não Iniciada) -->
+        <div id="step3" class="step not-started">
+            <div class="step-icon">🚚</div>
+            <div class="step-content">
+                <div class="step-title">Entrega</div>
+                <div class="step-message">Aguardando a resolução das pendências anteriores.</div>
+            </div>
+        </div>
+
+        <!-- Mensagem de Redirecionamento -->
+        <div id="redirect-info" class="redirect-message">
+            <div id="redirect-countdown-message"></div>
+        </div>
+    </div>
+
+    <div class="info-message">
+        Você já realizou o pagamento da taxa promocional no valor de <span class="highlight">R$38,82</span> mas precisará pagar a diferença entre os valores para seguir com a entrega, caso não seja pago o item retornará para o estoque.
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const step2 = document.getElementById("step2");
+            const step2Icon = step2.querySelector(".step-icon");
+            const step2Title = document.getElementById("step2-title");
+            const step2Message = document.getElementById("step2-message");
+            
+            const redirectInfoDiv = document.getElementById("redirect-info");
+            const redirectCountdownMessage = document.getElementById("redirect-countdown-message");
+
+            // Iniciar Etapa 2 como carregando após um breve delay
+            setTimeout(() => {
+                step2.className = "step loading";
+                step2Icon.innerHTML = "⟳"; // Ícone de spinner/atualização
+                step2Title.textContent = "Processando cálculo do frete...";
+                step2Message.textContent = "Estamos verificando os detalhes para o cálculo do seu frete.";
+
+                // Simular erro surpresa após mais um delay
+                setTimeout(() => {
+                    step2.className = "step error";
+                    step2Icon.innerHTML = "⚠"; // Ícone de aviso
+                    step2Title.textContent = "Erro no Cálculo do Frete";
+                    step2Message.innerHTML = "Houve um erro de cálculo no seu frete, é necessário conferir o endereço. <br>Por favor, verifique as instruções para regularizar.";
+                    
+                    // Adicionar animação de shake
+                    step2.style.animation = "shake 0.5s ease-in-out";
+                    setTimeout(() => {
+                        step2.style.animation = "pulse 2s infinite";
+                    }, 500);
+                    
+                    // Mostrar mensagem de redirecionamento e iniciar contagem
+                    redirectInfoDiv.style.display = "block";
+                    let countdown = 5;
+                    redirectCountdownMessage.textContent = `Será redirecionado em ${countdown} segundos para a próxima página para regularizar o frete.`;
+                    
+                    const countdownInterval = setInterval(() => {
+                        countdown--;
+                        if (countdown > 0) {
+                            redirectCountdownMessage.textContent = `Será redirecionado em ${countdown} segundos para a próxima página para regularizar o frete.`;
+                        } else if (countdown === 0) {
+                             redirectCountdownMessage.textContent = `Redirecionando agora...`;
+                        } else {
+                            clearInterval(countdownInterval); // Parar contador quando < 0
+                        }
+                    }, 1000);
+
+                    // Redirecionar após 6 segundos da aparição da mensagem de redirecionamento
+                    setTimeout(() => {
+                        window.location.href = "/pagamento_frete.html";
+                    }, 6000); // 6 segundos no total
+
+                }, 3000); // 3 segundos para carregar, depois mostrar erro
+
+            }, 1500); // 1.5 segundos de delay antes de iniciar o carregamento da etapa 2
+        });
+    </script>
+</body>
+</html>

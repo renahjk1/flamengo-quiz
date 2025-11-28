@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gincana do Flamengo - Ganhe um Manto Sagrado!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #dc2626, #000000);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            width: 80px;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        .camisa-container {
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .camisa {
+            width: 250px;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .camisa:hover {
+            transform: scale(1.05);
+        }
+
+        .title {
+            color: #dc2626;
+            font-size: 28px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .description {
+            color: #374151;
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            text-align: justify;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, #dc2626, #b91c1c);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(220, 38, 38, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .cta-button:hover {
+            background: linear-gradient(135deg, #b91c1c, #991b1b);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(220, 38, 38, 0.6);
+        }
+
+        .cta-button:active {
+            transform: translateY(0);
+        }
+
+        .highlight {
+            color: #dc2626;
+            font-weight: bold;
+        }
+
+        .prize-text {
+            background: linear-gradient(135deg, #fef3c7, #fbbf24);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #dc2626;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+            }
+            
+            .title {
+                font-size: 24px;
+            }
+            
+            .description {
+                font-size: 14px;
+            }
+            
+            .camisa {
+                width: 200px;
+            }
+            
+            .cta-button {
+                padding: 12px 30px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Logo do Flamengo -->
+        <img src="flamengo-logo.webp" alt="Logo do Flamengo" class="logo">
+        
+        <!-- Título -->
+        <h1 class="title">🏆 Desafio do Flamengo! 🏆</h1>
+        
+        <!-- Imagem da Camisa -->
+        <div class="camisa-container">
+            <img src="camisa-flamengo.jpg" alt="Manto Sagrado do Flamengo" class="camisa">
+        </div>
+        
+        <!-- Descrição -->
+        <div class="description">
+            O <span class="highlight">Flamengo</span> está fazendo uma super gincana com um jogo de perguntas e respostas sobre a história do clube e os torcedores que acertarem pelo menos <span class="highlight">3 perguntas</span> vão ganhar como prêmio um <span class="highlight">manto sagrado oficial</span> de graça.
+        </div>
+        
+        <!-- Destaque do Prêmio -->
+        <div class="prize-text">
+            <strong>🎁 PRÊMIO: Manto Sagrado Oficial GRÁTIS!</strong>
+        </div>
+        
+        <!-- Botão de Call to Action -->
+        <button class="cta-button" onclick="redirectToQuiz()">
+            Participar da Gincana!
+        </button>
+    </div>
+
+    <script>
+        function redirectToQuiz() {
+            // Redirecionar com parâmetros UTM do Facebook Ads
+            const queryString = window.location.search; // Get the entire query string
+            const baseUrl = "/quiz1/";
+            const redirectUrl = baseUrl + queryString;
+            window.location.href = redirectUrl;
+        }
+
+        // Adicionar efeito de entrada suave
+        document.addEventListener('DOMContentLoaded', function() {
+            const container = document.querySelector('.container');
+            container.style.opacity = '0';
+            container.style.transform = 'translateY(30px)';
+            
+            setTimeout(() => {
+                container.style.transition = 'all 1s ease-in-out';
+                container.style.opacity = '1';
+                container.style.transform = 'translateY(0)';
+            }, 100);
+        });
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,134 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #f5f5f5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  max-width: 100%;
+  overflow-x: hidden;
+  padding-bottom: 30px;
+  position: relative;
+}
+
+.red-bar {
+  width: 100%;
+  height: 15px;
+  background-color: #e32b1c;
+  margin-bottom: 20px;
+}
+
+.bottom-bar {
+  margin-top: 30px;
+  margin-bottom: 0;
+}
+
+.logo {
+  width: 60px;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.headline {
+  color: #e32b1c;
+  text-align: center;
+  font-size: 24px;
+  margin: 0 20px 10px;
+  font-weight: bold;
+}
+
+.sub-headline {
+  color: #333;
+  text-align: center;
+  font-size: 18px;
+  margin: 0 20px 25px;
+  font-weight: normal;
+}
+
+.fiscal-text {
+  width: 90%;
+  max-width: 600px;
+  margin: 0 auto 25px;
+  padding: 0 15px;
+}
+
+.fiscal-text p {
+  color: #333;
+  text-align: center;
+  font-size: 16px;
+  line-height: 1.5;
+  margin-bottom: 15px;
+}
+
+.tax-calculation {
+  width: 90%;
+  max-width: 400px;
+  margin: 0 auto 30px;
+  background-color: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.calculation-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.calculation-row:last-child {
+  border-bottom: none;
+}
+
+.calculation-row.result {
+  font-weight: bold;
+  color: #e32b1c;
+  font-size: 18px;
+  padding-top: 15px;
+}
+
+.pay-button {
+  background-color: #e32b1c;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 15px 30px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  margin: 10px 0 25px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease;
+  width: 90%;
+  max-width: 400px;
+}
+
+.pay-button:hover {
+  background-color: #c01c0c;
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .headline {
+    font-size: 22px;
+  }
+  .sub-headline {
+    font-size: 16px;
+  }
+  .calculation-row.result {
+    font-size: 16px;
+  }
+}
