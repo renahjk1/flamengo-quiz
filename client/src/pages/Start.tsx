@@ -1,8 +1,12 @@
 import { Button } from "@/components/ui/button";
+import { useUTM } from "@/hooks/useUTM";
 import { useLocation } from "wouter";
 
 export default function Start() {
   const [, setLocation] = useLocation();
+  
+  // Capture UTM params on page load
+  useUTM();
 
   const handleStart = () => {
     setLocation("/quiz");

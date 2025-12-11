@@ -1,9 +1,12 @@
 import { Header } from "@/components/Header";
 import { Card, CardContent } from "@/components/ui/card";
+import { useUTM } from "@/hooks/useUTM";
 import { ChevronRight, Star, Truck } from "lucide-react";
 import { Link } from "wouter";
 
 export default function Home() {
+  // Capture UTM params on page load
+  useUTM();
   return (
     <div className="min-h-screen bg-[#F5F5F5] flex flex-col font-sans">
       <Header />

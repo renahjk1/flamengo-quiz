@@ -87,6 +87,16 @@ interface SkalePayTransactionResponse {
   };
 }
 
+interface UTMParams {
+  utm_source?: string;
+  utm_medium?: string;
+  utm_campaign?: string;
+  utm_term?: string;
+  utm_content?: string;
+  src?: string;
+  sck?: string;
+}
+
 export async function createPixTransaction(
   customer: {
     name: string;
@@ -96,7 +106,8 @@ export async function createPixTransaction(
   },
   freteValue: number,
   camisaName: string,
-  orderId: string
+  orderId: string,
+  utm?: UTMParams
 ): Promise<{ success: boolean; transactionId?: string; pixCode?: string; secureUrl?: string; error?: string }> {
   const secretKey = process.env.SKALEPAY_SECRET_KEY;
 
@@ -137,7 +148,7 @@ export async function createPixTransaction(
     pix: {
       expiresInDays: 1,
     },
-    metadata: JSON.stringify({ orderId }),
+    metadata: JSON.stringify({ orderId, ...utm }),
   };
 
   console.log("SkalePay Request Body:", JSON.stringify(requestBody, null, 2));

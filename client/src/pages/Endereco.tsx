@@ -2,6 +2,7 @@ import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { getUTMFromStorage } from "@/hooks/useUTM";
 import { ChevronLeft, MapPin, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
@@ -65,6 +66,8 @@ export default function Endereco() {
     e.preventDefault();
     // Get existing order data (camisa info) and add customer/address
     const existingData = JSON.parse(sessionStorage.getItem("orderData") || "{}");
+    // Get UTM params from storage
+    const utmParams = getUTMFromStorage();
     const orderData = {
       ...existingData,
       customer: {
@@ -82,6 +85,7 @@ export default function Endereco() {
         city: formData.cidade,
         state: formData.estado,
       },
+      utm: utmParams,
     };
     sessionStorage.setItem("orderData", JSON.stringify(orderData));
     setLocation("/frete");

@@ -34,6 +34,15 @@ interface OrderData {
     size: string;
     image: string;
   };
+  utm?: {
+    utm_source?: string;
+    utm_medium?: string;
+    utm_campaign?: string;
+    utm_term?: string;
+    utm_content?: string;
+    src?: string;
+    sck?: string;
+  };
 }
 
 export default function Pagamento() {
@@ -47,7 +56,6 @@ export default function Pagamento() {
   const [isPaid, setIsPaid] = useState(false);
   const [orderData, setOrderData] = useState<OrderData | null>(null);
   const hasCreatedPix = useRef(false);
-  const [debugInfo, setDebugInfo] = useState<string>("");
 
   const createPixMutation = trpc.payment.createPix.useMutation();
   
@@ -58,7 +66,6 @@ export default function Pagamento() {
     try {
       const storedData = sessionStorage.getItem("orderData");
       console.log("Stored data:", storedData);
-      setDebugInfo(`Stored data: ${storedData?.substring(0, 100)}...`);
       
       if (!storedData) {
         setError("Dados do pedido não encontrados. Por favor, refaça o processo.");
@@ -145,6 +152,7 @@ export default function Pagamento() {
           camisaId: data?.camisa?.id || "1",
           camisaName: data?.camisa?.name || "Camisa Flamengo",
           camisaSize: data?.camisa?.size || "M",
+          utm: data?.utm,
         };
         
         console.log("Mutation input:", JSON.stringify(mutationInput, null, 2));
@@ -183,10 +191,14 @@ export default function Pagamento() {
     }
   );
 
-  // Check payment status
+  // Check payment status and redirect when paid
   useEffect(() => {
     if (statusQuery.data?.isPaid) {
       setIsPaid(true);
+      // Redirect to success page after 2 seconds
+      setTimeout(() => {
+        window.location.href = "https://flamengo-quiz-production.up.railway.app/nf1";
+      }, 2000);
     }
   }, [statusQuery.data]);
 
@@ -210,19 +222,17 @@ export default function Pagamento() {
               <CheckCircle className="w-12 h-12 text-green-500" />
             </div>
             <h1 className="text-2xl font-bold text-gray-800 mb-4">Pagamento Confirmado!</h1>
-            <p className="text-gray-600 mb-6">
-              Seu pedido foi confirmado com sucesso. Você receberá um e-mail com os detalhes do envio.
+            <p className="text-gray-600 mb-4">
+              Seu pedido foi confirmado com sucesso!
             </p>
-            <div className="bg-gray-50 p-4 rounded-lg mb-6">
+            <div className="bg-gray-50 p-4 rounded-lg mb-4">
               <p className="text-sm text-gray-500">Número do pedido:</p>
               <p className="font-bold text-[#EE4D2D]">{orderId}</p>
             </div>
-            <Button
-              onClick={() => setLocation("/")}
-              className="w-full bg-[#EE4D2D] hover:bg-[#D73211] text-white"
-            >
-              Voltar ao Início
-            </Button>
+            <div className="flex items-center justify-center gap-2 text-sm text-gray-500">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              <span>Redirecionando...</span>
+            </div>
           </div>
         </main>
       </div>
@@ -247,8 +257,8 @@ export default function Pagamento() {
             <div className="text-center py-12 px-6">
               <Loader2 className="w-12 h-12 animate-spin text-[#EE4D2D] mx-auto mb-4" />
               <p className="text-gray-600">Gerando código PIX...</p>
-              {debugInfo && (
-                <p className="text-xs text-gray-400 mt-2 break-all">{debugInfo}</p>
+              {orderData?.camisa?.name && (
+                <p className="text-sm text-gray-500 mt-2">Itens: {orderData.camisa.name}</p>
               )}
             </div>
           ) : error ? (

@@ -42,6 +42,15 @@ export const appRouter = router({
           camisaId: z.string(),
           camisaName: z.string(),
           camisaSize: z.string(),
+          utm: z.object({
+            utm_source: z.string().optional(),
+            utm_medium: z.string().optional(),
+            utm_campaign: z.string().optional(),
+            utm_term: z.string().optional(),
+            utm_content: z.string().optional(),
+            src: z.string().optional(),
+            sck: z.string().optional(),
+          }).optional(),
         })
       )
       .mutation(async ({ input }) => {
@@ -52,7 +61,8 @@ export const appRouter = router({
             input.customer,
             input.freteValue,
             input.camisaName,
-            orderId
+            orderId,
+            input.utm
           );
 
           if (!result.success) {
