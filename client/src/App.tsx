@@ -4,13 +4,23 @@ import NotFound from "@/pages/NotFound";
 import { Route, Switch } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import Endereco from "./pages/Endereco";
+import Frete from "./pages/Frete";
 import Home from "./pages/Home";
+import Pagamento from "./pages/Pagamento";
+import Parabens from "./pages/Parabens";
+import Produto from "./pages/Produto";
 
 
 function Router() {
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path={"/parabens"} component={Parabens} />
+      <Route path={"/produto/:id"} component={Produto} />
+      <Route path={"/endereco"} component={Endereco} />
+      <Route path={"/frete"} component={Frete} />
+      <Route path={"/pagamento"} component={Pagamento} />
       <Route path={"/404"} component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />
