@@ -6,35 +6,35 @@ const quizData = [
   {
     id: 1,
     question: "Em que ano foi fundado o Clube de Regatas do Flamengo?",
-    image: "/images/fundacao.webp", // Placeholder, precisa garantir que a imagem existe
+    image: "/images/fundacao.webp",
     options: ["1895", "1900", "1881"],
     correct: 0
   },
   {
     id: 2,
     question: "Qual é o estádio onde o Flamengo manda seus jogos principais?",
-    image: "/images/estadio1.jpg", // Placeholder
+    image: "/images/estadio1.jpg",
     options: ["Estádio da Gávea", "Maracanã", "São Januário"],
     correct: 1
   },
   {
     id: 3,
     question: "Quem é considerado o maior ídolo da história do Flamengo?",
-    image: "/images/jogadores1.jpg", // Placeholder
+    image: "/images/jogadores1.jpg",
     options: ["Romário", "Zico", "Adriano"],
     correct: 1
   },
   {
     id: 4,
     question: "Quantas vezes o Flamengo foi campeão da Libertadores?",
-    image: "/images/jogadores2.jpg", // Placeholder
+    image: "/images/jogadores2.jpg",
     options: ["2 vezes", "4 vezes", "5 vezes"],
     correct: 1
   },
   {
     id: 5,
     question: "Qual é o apelido mais famoso do Flamengo?",
-    image: "/images/logo-fla-shopee.png", // Usando logo como fallback
+    image: "/images/flamengo-logo.webp",
     options: ["Mengão", "Rubro-Negro", "Urubu"],
     correct: 0
   }
@@ -86,10 +86,13 @@ export default function Quiz() {
           {question.question}
         </h2>
 
-        {/* Imagem da Pergunta (Placeholder visual se a imagem não existir) */}
+        {/* Imagem da Pergunta */}
         <div className="w-full h-48 bg-gray-100 rounded-xl mb-6 overflow-hidden shadow-inner flex items-center justify-center">
-           {/* Aqui idealmente usaríamos as imagens reais, mas como fallback usamos um ícone ou cor */}
-           <div className="text-gray-400 text-sm">Imagem da Pergunta {question.id}</div>
+           <img 
+             src={question.image} 
+             alt={`Imagem da pergunta ${question.id}`}
+             className="w-full h-full object-cover"
+           />
         </div>
 
         {/* Opções */}

@@ -19,28 +19,28 @@ export default function Start() {
         />
         
         {/* Título */}
-        <h1 className="text-2xl font-bold text-[#dc2626] mb-6 drop-shadow-sm">
+        <h1 className="text-xl md:text-2xl font-bold text-[#dc2626] mb-6 drop-shadow-sm whitespace-nowrap overflow-hidden text-ellipsis px-2">
           🏆 Desafio do Flamengo! 🏆
         </h1>
         
-        {/* Imagem da Camisa */}
-        <div className="my-8 relative group">
+        {/* Imagem da Campanha */}
+        <div className="my-6 relative group">
           <div className="absolute inset-0 bg-[#dc2626]/20 rounded-xl blur-xl group-hover:blur-2xl transition-all duration-500"></div>
           <img 
-            src="/images/camisa1.webp" 
+            src="/images/campeao-2025.png" 
             alt="Flamengo Campeão" 
-            className="w-64 mx-auto relative z-10 transform group-hover:scale-105 transition-transform duration-300 drop-shadow-xl"
+            className="w-full max-w-xs mx-auto relative z-10 rounded-lg shadow-lg transform group-hover:scale-105 transition-transform duration-300"
           />
         </div>
         
         {/* Descrição */}
-        <div className="text-gray-700 text-base leading-relaxed mb-8 text-justify">
-          O <span className="font-bold text-[#dc2626]">Flamengo</span> está fazendo uma super gincana com um jogo de perguntas e respostas sobre a história do clube e os torcedores que acertarem pelo menos <span className="font-bold text-[#dc2626]">3 perguntas</span> vão ganhar como prêmio um <span className="font-bold text-[#dc2626]">manto sagrado oficial</span> de graça.
+        <div className="text-gray-700 text-sm md:text-base leading-relaxed mb-6 text-justify px-2">
+          O <span className="font-bold text-[#dc2626]">Flamengo</span> em parceria com a <span className="font-bold text-[#EE4D2D]">Shopee</span> está distribuindo 3 mil camisetas através de um jogo de perguntas e respostas e os torcedores que acertar <span className="font-bold text-[#dc2626]">todas as perguntas</span> irá ganhar uma camiseta oficial de graça.
         </div>
         
         {/* Destaque do Prêmio */}
-        <div className="bg-gradient-to-r from-yellow-50 to-yellow-100 p-4 rounded-lg mb-8 border-l-4 border-[#dc2626] shadow-sm">
-          <strong className="text-gray-800 flex items-center justify-center gap-2">
+        <div className="bg-gradient-to-r from-yellow-50 to-yellow-100 p-3 rounded-lg mb-6 border-l-4 border-[#dc2626] shadow-sm">
+          <strong className="text-gray-800 text-sm md:text-base flex items-center justify-center gap-2 whitespace-nowrap">
             🎁 PRÊMIO: Manto Sagrado Oficial GRÁTIS!
           </strong>
         </div>
