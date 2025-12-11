@@ -1,7 +1,8 @@
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
-import { CheckCircle, ChevronLeft, Copy, Loader2, QrCode, RefreshCw } from "lucide-react";
+import { CheckCircle, ChevronLeft, Copy, Loader2, RefreshCw } from "lucide-react";
+import { QRCodeSVG } from "qrcode.react";
 import { useEffect, useState, useRef } from "react";
 import { Link, useLocation } from "wouter";
 
@@ -269,9 +270,13 @@ export default function Pagamento() {
               {/* QR Code */}
               <div className="bg-gray-50 p-6 rounded-lg mb-6 text-center">
                 <div className="bg-white p-4 rounded-lg inline-block mb-4 shadow-sm">
-                  <div className="w-48 h-48 bg-gradient-to-br from-gray-200 to-gray-300 rounded-lg flex items-center justify-center">
-                    <QrCode className="w-32 h-32 text-gray-600" />
-                  </div>
+                  <QRCodeSVG 
+                      value={pixPayload} 
+                      size={192}
+                      level="M"
+                      includeMargin={true}
+                      className="rounded-lg"
+                    />
                 </div>
                 <p className="text-sm text-gray-500">
                   Escaneie o QR Code ou copie o código abaixo

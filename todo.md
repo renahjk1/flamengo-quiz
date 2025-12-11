@@ -4,3 +4,5 @@
 - [x] Criar arquivo skalepay.ts com a integração
 - [x] Atualizar routers.ts para usar SkalePay
 - [x] Testar o fluxo completo de pagamento
+
+- [x] Corrigir exibição do QR Code na página de pagamento
