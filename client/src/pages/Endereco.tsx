@@ -2,12 +2,13 @@ import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ChevronLeft, MapPin } from "lucide-react";
+import { ChevronLeft, MapPin, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
 
 export default function Endereco() {
   const [, setLocation] = useLocation();
+  const [loadingCep, setLoadingCep] = useState(false);
   const [formData, setFormData] = useState({
     nome: "",
     telefone: "",
@@ -20,7 +21,41 @@ export default function Endereco() {
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    
+    // Máscara simples para CEP
+    if (name === "cep") {
+      const numericValue = value.replace(/\D/g, "");
+      setFormData(prev => ({ ...prev, [name]: numericValue }));
+      
+      if (numericValue.length === 8) {
+        fetchAddress(numericValue);
+      }
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
+  };
+
+  const fetchAddress = async (cep: string) => {
+    setLoadingCep(true);
+    try {
+      const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+      const data = await response.json();
+      
+      if (!data.erro) {
+        setFormData(prev => ({
+          ...prev,
+          rua: data.logradouro,
+          bairro: data.bairro,
+          cidade: data.localidade,
+          estado: data.uf
+        }));
+      }
+    } catch (error) {
+      console.error("Erro ao buscar CEP:", error);
+    } finally {
+      setLoadingCep(false);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -83,16 +118,24 @@ export default function Endereco() {
             <div className="space-y-4">
               <h2 className="text-sm font-bold text-gray-500 uppercase mb-4 pt-4 border-t">Endereço</h2>
               
-              <div className="grid gap-2">
+              <div className="grid gap-2 relative">
                 <Label htmlFor="cep">CEP</Label>
-                <Input 
-                  id="cep" 
-                  name="cep" 
-                  placeholder="00000-000" 
-                  value={formData.cep}
-                  onChange={handleChange}
-                  className="focus-visible:ring-[#EE4D2D]"
-                />
+                <div className="relative">
+                  <Input 
+                    id="cep" 
+                    name="cep" 
+                    placeholder="00000000" 
+                    value={formData.cep}
+                    onChange={handleChange}
+                    maxLength={8}
+                    className="focus-visible:ring-[#EE4D2D] pr-10"
+                  />
+                  {loadingCep && (
+                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                      <Loader2 className="h-4 w-4 animate-spin text-[#EE4D2D]" />
+                    </div>
+                  )}
+                </div>
               </div>
 
               <div className="grid grid-cols-3 gap-4">
@@ -104,7 +147,8 @@ export default function Endereco() {
                     placeholder="Nome da rua" 
                     value={formData.rua}
                     onChange={handleChange}
-                    className="focus-visible:ring-[#EE4D2D]"
+                    className="focus-visible:ring-[#EE4D2D] bg-gray-50"
+                    readOnly={loadingCep}
                   />
                 </div>
                 <div className="grid gap-2">
@@ -128,7 +172,8 @@ export default function Endereco() {
                   placeholder="Seu bairro" 
                   value={formData.bairro}
                   onChange={handleChange}
-                  className="focus-visible:ring-[#EE4D2D]"
+                  className="focus-visible:ring-[#EE4D2D] bg-gray-50"
+                  readOnly={loadingCep}
                 />
               </div>
 
@@ -141,7 +186,8 @@ export default function Endereco() {
                     placeholder="Sua cidade" 
                     value={formData.cidade}
                     onChange={handleChange}
-                    className="focus-visible:ring-[#EE4D2D]"
+                    className="focus-visible:ring-[#EE4D2D] bg-gray-50"
+                    readOnly={loadingCep}
                   />
                 </div>
                 <div className="grid gap-2">
@@ -152,7 +198,8 @@ export default function Endereco() {
                     placeholder="UF" 
                     value={formData.estado}
                     onChange={handleChange}
-                    className="focus-visible:ring-[#EE4D2D]"
+                    className="focus-visible:ring-[#EE4D2D] bg-gray-50"
+                    readOnly={loadingCep}
                   />
                 </div>
               </div>

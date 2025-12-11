@@ -7,15 +7,21 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Endereco from "./pages/Endereco";
 import Frete from "./pages/Frete";
 import Home from "./pages/Home";
+import Loading from "./pages/Loading";
 import Pagamento from "./pages/Pagamento";
 import Parabens from "./pages/Parabens";
 import Produto from "./pages/Produto";
+import Quiz from "./pages/Quiz";
+import Start from "./pages/Start";
 
 
 function Router() {
   return (
     <Switch>
-      <Route path={"/"} component={Home} />
+      <Route path={"/"} component={Start} />
+      <Route path={"/quiz"} component={Quiz} />
+      <Route path={"/loading"} component={Loading} />
+      <Route path={"/home"} component={Home} />
       <Route path={"/parabens"} component={Parabens} />
       <Route path={"/produto/:id"} component={Produto} />
       <Route path={"/endereco"} component={Endereco} />
