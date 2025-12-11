@@ -12,5 +12,9 @@
 - [x] Atualizar páginas para propagar UTMs
 - [x] Enviar UTMs para API SkalePay
 - [x] Implementar redirecionamento pós-pagamento para https://flamengo-quiz-production.up.railway.app/nf1
-
 - [x] Integrar API de conversão da UTMify para rastrear vendas
+- [x] Adicionar mensagem "PIX gerado com sucesso!" acima do QR Code
+- [x] Adicionar texto explicativo sobre como pagar
+- [x] Incluir nome do item no resumo do pedido
+- [x] Verificação de status de pagamento na SkalePay (funcionando - aguarda pagamento real)
+- [x] Envio de conversão para UTMify após pagamento confirmado (configurado - aguarda pagamento real)

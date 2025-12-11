@@ -303,6 +303,19 @@ export default function Pagamento() {
             </div>
           ) : (
             <div className="p-6">
+              {/* Mensagem de Sucesso */}
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                <div className="flex items-center gap-3">
+                  <CheckCircle className="w-6 h-6 text-green-600" />
+                  <div>
+                    <p className="font-bold text-green-800">PIX gerado com sucesso!</p>
+                    <p className="text-sm text-green-700">
+                      Copie o código ou use a câmera para ler o QR Code e realize o pagamento no app do seu banco.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
               {/* QR Code */}
               <div className="bg-gray-50 p-6 rounded-lg mb-6 text-center">
                 <div className="bg-white p-4 rounded-lg inline-block mb-4 shadow-sm">
@@ -369,7 +382,11 @@ export default function Pagamento() {
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-gray-600">Produto</span>
-                    <span className="font-medium">R$ 0,00</span>
+                    <span className="font-medium text-right">{orderData?.camisa?.name || "Camisa Flamengo"}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Valor do Produto</span>
+                    <span className="font-medium text-green-600">GRÁTIS</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-gray-600">Frete</span>
