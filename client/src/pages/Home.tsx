@@ -13,7 +13,7 @@ export default function Home() {
         {/* Banner Principal */}
         <div className="w-full rounded-lg overflow-hidden shadow-md mb-6 bg-black">
           <img 
-            src="/images/banner-loja.webp" 
+            src="/images/banner-loja-novo.png" 
             alt="Loja Oficial do Flamengo na Shopee" 
             className="w-full h-auto object-cover"
           />
