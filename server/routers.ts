@@ -3,7 +3,7 @@ import { z } from "zod";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
-import { createPixTransaction, getTransaction } from "./sunize";
+import { createPixTransaction, getTransaction } from "./skalepay";
 
 export const appRouter = router({
   system: systemRouter,
@@ -44,25 +44,31 @@ export const appRouter = router({
           camisaSize: z.string(),
         })
       )
-      .mutation(async ({ input, ctx }) => {
+      .mutation(async ({ input }) => {
         const orderId = `FLA-${Date.now()}-${Math.random().toString(36).substring(7)}`;
-        const clientIp = ctx.req.headers["x-forwarded-for"] as string || ctx.req.ip || "127.0.0.1";
 
         try {
-          const transaction = await createPixTransaction(
+          const result = await createPixTransaction(
             input.customer,
             input.freteValue,
             input.camisaName,
-            orderId,
-            clientIp
+            orderId
           );
+
+          if (!result.success) {
+            return {
+              success: false,
+              error: result.error || "Erro ao criar pagamento",
+            };
+          }
 
           return {
             success: true,
-            transactionId: transaction.id,
+            transactionId: result.transactionId,
             orderId: orderId,
-            pixPayload: transaction.pix?.payload || "",
-            status: transaction.status,
+            pixPayload: result.pixCode || "",
+            secureUrl: result.secureUrl || "",
+            status: "waiting_payment",
           };
         } catch (error) {
           console.error("Payment creation error:", error);
@@ -77,11 +83,19 @@ export const appRouter = router({
       .input(z.object({ transactionId: z.string() }))
       .query(async ({ input }) => {
         try {
-          const transaction = await getTransaction(input.transactionId);
+          const result = await getTransaction(input.transactionId);
+          
+          if (!result.success) {
+            return {
+              success: false,
+              error: result.error || "Erro ao verificar status",
+            };
+          }
+
           return {
             success: true,
-            status: transaction.status,
-            isPaid: transaction.status === "AUTHORIZED",
+            status: result.status,
+            isPaid: result.isPaid,
           };
         } catch (error) {
           console.error("Status check error:", error);

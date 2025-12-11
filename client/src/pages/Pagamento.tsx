@@ -2,7 +2,7 @@ import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { trpc } from "@/lib/trpc";
 import { CheckCircle, ChevronLeft, Copy, Loader2, QrCode, RefreshCw } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { Link, useLocation } from "wouter";
 
 interface OrderData {
@@ -44,19 +44,136 @@ export default function Pagamento() {
   const [isCreating, setIsCreating] = useState(true);
   const [error, setError] = useState<string>("");
   const [isPaid, setIsPaid] = useState(false);
-  const [orderData, setOrderData] = useState<OrderData>({});
-  const [dataLoaded, setDataLoaded] = useState(false);
+  const [orderData, setOrderData] = useState<OrderData | null>(null);
+  const hasCreatedPix = useRef(false);
+  const [debugInfo, setDebugInfo] = useState<string>("");
 
-  // Load order data from sessionStorage
+  const createPixMutation = trpc.payment.createPix.useMutation();
+  
+  // Load order data from sessionStorage on mount
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const data = JSON.parse(sessionStorage.getItem("orderData") || "{}");
+    console.log("Pagamento useEffect started");
+    
+    try {
+      const storedData = sessionStorage.getItem("orderData");
+      console.log("Stored data:", storedData);
+      setDebugInfo(`Stored data: ${storedData?.substring(0, 100)}...`);
+      
+      if (!storedData) {
+        setError("Dados do pedido não encontrados. Por favor, refaça o processo.");
+        setIsCreating(false);
+        return;
+      }
+      
+      let data: OrderData;
+      try {
+        data = JSON.parse(storedData);
+        console.log("Parsed data:", data);
+      } catch (parseError) {
+        console.error("Parse error:", parseError);
+        setError("Erro ao processar dados do pedido.");
+        setIsCreating(false);
+        return;
+      }
+      
       setOrderData(data);
-      setDataLoaded(true);
+      
+      // Safe access to all fields
+      const customerName = data?.customer?.name;
+      const customerEmail = data?.customer?.email;
+      const customerPhone = data?.customer?.phone;
+      const customerCpf = data?.customer?.cpf;
+      
+      const addressCep = data?.address?.cep;
+      const addressStreet = data?.address?.street;
+      const addressNumber = data?.address?.number || "S/N";
+      const addressComplement = data?.address?.complement || "";
+      const addressNeighborhood = data?.address?.neighborhood || "";
+      const addressCity = data?.address?.city || "";
+      const addressState = data?.address?.state || "";
+      
+      const freteType = data?.frete?.type;
+      const freteValue = data?.frete?.value;
+      
+      console.log("Customer:", { customerName, customerEmail, customerPhone, customerCpf });
+      console.log("Address:", { addressCep, addressStreet, addressNumber });
+      console.log("Frete:", { freteType, freteValue });
+      
+      // Validate required data
+      if (!customerName || !customerEmail || !customerPhone || !customerCpf) {
+        setError("Dados do cliente não encontrados. Por favor, refaça o processo.");
+        setIsCreating(false);
+        return;
+      }
+      
+      if (!freteType || freteValue === undefined || freteValue === null) {
+        setError("Dados do frete não encontrados. Por favor, refaça o processo.");
+        setIsCreating(false);
+        return;
+      }
+      
+      if (!addressCep || !addressStreet) {
+        setError("Dados do endereço não encontrados. Por favor, refaça o processo.");
+        setIsCreating(false);
+        return;
+      }
+      
+      // All data valid, create PIX
+      if (!hasCreatedPix.current) {
+        hasCreatedPix.current = true;
+        console.log("Creating PIX...");
+        
+        const mutationInput = {
+          customer: {
+            name: customerName,
+            email: customerEmail,
+            phone: customerPhone,
+            cpf: customerCpf,
+          },
+          address: {
+            cep: addressCep,
+            street: addressStreet,
+            number: addressNumber,
+            complement: addressComplement,
+            neighborhood: addressNeighborhood,
+            city: addressCity,
+            state: addressState,
+          },
+          freteType: freteType as "sedex" | "pac" | "transportadora",
+          freteValue: freteValue,
+          camisaId: data?.camisa?.id || "1",
+          camisaName: data?.camisa?.name || "Camisa Flamengo",
+          camisaSize: data?.camisa?.size || "M",
+        };
+        
+        console.log("Mutation input:", JSON.stringify(mutationInput, null, 2));
+        
+        createPixMutation.mutate(mutationInput, {
+          onSuccess: (response) => {
+            console.log("PIX response:", response);
+            if (response.success && response.pixPayload) {
+              setPixPayload(response.pixPayload);
+              setTransactionId(response.transactionId || "");
+              setOrderId(response.orderId || "");
+            } else {
+              setError(response.error || "Erro ao gerar PIX");
+            }
+            setIsCreating(false);
+          },
+          onError: (err) => {
+            console.error("PIX error:", err);
+            setError(err.message || "Erro ao conectar com o servidor");
+            setIsCreating(false);
+          },
+        });
+      }
+    } catch (e) {
+      console.error("Unexpected error:", e);
+      setError(`Erro inesperado: ${e instanceof Error ? e.message : String(e)}`);
+      setIsCreating(false);
     }
   }, []);
 
-  const createPixMutation = trpc.payment.createPix.useMutation();
   const statusQuery = trpc.payment.checkStatus.useQuery(
     { transactionId },
     {
@@ -64,53 +181,6 @@ export default function Pagamento() {
       refetchInterval: 5000,
     }
   );
-
-  // Create PIX when data is loaded
-  useEffect(() => {
-    if (!dataLoaded) return;
-    
-    if (!orderData.customer || !orderData.frete || !orderData.address) {
-      setError("Dados do pedido não encontrados. Por favor, refaça o processo.");
-      setIsCreating(false);
-      return;
-    }
-
-    createPixMutation.mutate(
-      {
-        customer: orderData.customer,
-        address: {
-          cep: orderData.address.cep || "",
-          street: orderData.address.street || "",
-          number: orderData.address.number || "",
-          complement: orderData.address.complement || "",
-          neighborhood: orderData.address.neighborhood || "",
-          city: orderData.address.city || "",
-          state: orderData.address.state || "",
-        },
-        freteType: orderData.frete.type as "sedex" | "pac" | "transportadora",
-        freteValue: orderData.frete.value || 0,
-        camisaId: orderData.camisa?.id || "1",
-        camisaName: orderData.camisa?.name || "Camisa Flamengo",
-        camisaSize: orderData.camisa?.size || "M",
-      },
-      {
-        onSuccess: (data) => {
-          if (data.success && data.pixPayload) {
-            setPixPayload(data.pixPayload);
-            setTransactionId(data.transactionId || "");
-            setOrderId(data.orderId || "");
-          } else {
-            setError(data.error || "Erro ao gerar PIX");
-          }
-          setIsCreating(false);
-        },
-        onError: (err) => {
-          setError(err.message || "Erro ao conectar com o servidor");
-          setIsCreating(false);
-        },
-      }
-    );
-  }, [dataLoaded, orderData]);
 
   // Check payment status
   useEffect(() => {
@@ -127,7 +197,7 @@ export default function Pagamento() {
     }
   };
 
-  const freteValue = orderData.frete?.value || 0;
+  const freteValue = orderData?.frete?.value ?? 0;
 
   if (isPaid) {
     return (
@@ -176,6 +246,9 @@ export default function Pagamento() {
             <div className="text-center py-12 px-6">
               <Loader2 className="w-12 h-12 animate-spin text-[#EE4D2D] mx-auto mb-4" />
               <p className="text-gray-600">Gerando código PIX...</p>
+              {debugInfo && (
+                <p className="text-xs text-gray-400 mt-2 break-all">{debugInfo}</p>
+              )}
             </div>
           ) : error ? (
             <div className="text-center py-12 px-6">
