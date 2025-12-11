@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1765422821471,
+      "tag": "0000_glorious_daimon_hellstrom",
+      "breakpoints": true
+    }
+  ]
+}

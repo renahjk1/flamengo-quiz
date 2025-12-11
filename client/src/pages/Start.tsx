@@ -29,7 +29,7 @@ export default function Start() {
           <img 
             src="/images/campeao-2025.png" 
             alt="Flamengo Campeão" 
-            className="w-full max-w-xs mx-auto relative z-10 rounded-lg shadow-lg transform group-hover:scale-105 transition-transform duration-300"
+            className="w-3/4 max-w-[240px] mx-auto relative z-10 rounded-lg shadow-lg transform group-hover:scale-105 transition-transform duration-300"
           />
         </div>
         
@@ -39,8 +39,8 @@ export default function Start() {
         </div>
         
         {/* Destaque do Prêmio */}
-        <div className="bg-gradient-to-r from-yellow-50 to-yellow-100 p-3 rounded-lg mb-6 border-l-4 border-[#dc2626] shadow-sm">
-          <strong className="text-gray-800 text-sm md:text-base flex items-center justify-center gap-2 whitespace-nowrap">
+        <div className="bg-gradient-to-r from-yellow-50 to-yellow-100 p-3 rounded-lg mb-6 border-l-4 border-[#dc2626] shadow-sm overflow-hidden">
+          <strong className="text-gray-800 text-xs md:text-sm flex items-center justify-center gap-1 whitespace-nowrap overflow-hidden text-ellipsis">
             🎁 PRÊMIO: Manto Sagrado Oficial GRÁTIS!
           </strong>
         </div>

@@ -39,6 +39,19 @@ export default function Frete() {
 
   const handleContinue = () => {
     if (selectedFrete) {
+      const selectedOption = freteOptions.find(o => o.id === selectedFrete);
+      // Get existing order data and add frete info
+      const existingData = JSON.parse(sessionStorage.getItem("orderData") || "{}");
+      const orderData = {
+        ...existingData,
+        frete: {
+          type: selectedFrete,
+          name: selectedOption?.name,
+          time: selectedOption?.time,
+          value: parseFloat(selectedOption?.price.replace(",", ".") || "0"),
+        },
+      };
+      sessionStorage.setItem("orderData", JSON.stringify(orderData));
       setLocation("/pagamento");
     }
   };

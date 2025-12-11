@@ -1,5 +1,4 @@
 import { Header } from "@/components/Header";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ChevronRight, Star, Truck } from "lucide-react";
 import { Link } from "wouter";

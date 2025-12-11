@@ -2,7 +2,7 @@ import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { ChevronRight, Heart, MessageCircle, Share2, ShoppingCart, Star, Truck } from "lucide-react";
 import { useState } from "react";
-import { Link, useRoute } from "wouter";
+import { Link, useLocation, useRoute } from "wouter";
 
 const products = {
   "1": {
@@ -33,11 +33,28 @@ const products = {
 
 export default function Produto() {
   const [match, params] = useRoute("/produto/:id");
+  const [, setLocation] = useLocation();
   const id = params?.id as keyof typeof products;
   const product = products[id] || products["1"];
   
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const sizes = ["P", "M", "G", "GG", "XG"];
+
+  const handleReceberPremio = () => {
+    if (selectedSize) {
+      // Save camisa data to sessionStorage
+      const orderData = {
+        camisa: {
+          id: product.id,
+          name: product.name,
+          size: selectedSize,
+          image: product.image,
+        },
+      };
+      sessionStorage.setItem("orderData", JSON.stringify(orderData));
+      setLocation("/endereco");
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#F5F5F5] flex flex-col font-sans pb-20">
@@ -166,9 +183,9 @@ export default function Produto() {
                 <Button variant="outline" className="flex-1 border-[#EE4D2D] text-[#EE4D2D] bg-[#EE4D2D]/10 hover:bg-[#EE4D2D]/20 h-12">
                   <MessageCircle size={18} className="mr-2" /> Conversar Agora
                 </Button>
-                <Link href={selectedSize ? "/endereco" : "#"} className="flex-1">
-                  <Button 
-                    className={`w-full h-12 font-bold ${
+                <Button 
+                    onClick={handleReceberPremio}
+                    className={`flex-1 h-12 font-bold ${
                       selectedSize 
                         ? "bg-[#EE4D2D] hover:bg-[#d73211] text-white" 
                         : "bg-gray-300 cursor-not-allowed text-gray-500"
@@ -177,7 +194,6 @@ export default function Produto() {
                   >
                     RECEBER MEU PRÊMIO
                   </Button>
-                </Link>
               </div>
             </div>
           </div>
@@ -215,9 +231,9 @@ export default function Produto() {
           <ShoppingCart size={20} />
           <span className="text-[10px]">Add</span>
         </div>
-        <Link href={selectedSize ? "/endereco" : "#"} className="flex-1">
-          <Button 
-            className={`w-full font-bold ${
+        <Button 
+            onClick={handleReceberPremio}
+            className={`flex-1 font-bold ${
               selectedSize 
                 ? "bg-[#EE4D2D] hover:bg-[#d73211] text-white" 
                 : "bg-gray-300 cursor-not-allowed text-gray-500"
@@ -226,7 +242,6 @@ export default function Produto() {
           >
             {selectedSize ? "RECEBER MEU PRÊMIO" : "SELECIONE O TAMANHO"}
           </Button>
-        </Link>
       </div>
     </div>
   );

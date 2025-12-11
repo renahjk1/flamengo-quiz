@@ -14,8 +14,8 @@ import Produto from "./pages/Produto";
 import Quiz from "./pages/Quiz";
 import Start from "./pages/Start";
 
-
 function Router() {
+  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Start} />

@@ -11,10 +11,13 @@ export default function Endereco() {
   const [loadingCep, setLoadingCep] = useState(false);
   const [formData, setFormData] = useState({
     nome: "",
+    email: "",
     telefone: "",
+    cpf: "",
     cep: "",
     rua: "",
     numero: "",
+    complemento: "",
     bairro: "",
     cidade: "",
     estado: ""
@@ -60,11 +63,32 @@ export default function Endereco() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    // Simular salvamento e ir para frete
+    // Get existing order data (camisa info) and add customer/address
+    const existingData = JSON.parse(sessionStorage.getItem("orderData") || "{}");
+    const orderData = {
+      ...existingData,
+      customer: {
+        name: formData.nome,
+        email: formData.email,
+        phone: formData.telefone,
+        cpf: formData.cpf,
+      },
+      address: {
+        cep: formData.cep,
+        street: formData.rua,
+        number: formData.numero,
+        complement: formData.complemento,
+        neighborhood: formData.bairro,
+        city: formData.cidade,
+        state: formData.estado,
+      },
+    };
+    sessionStorage.setItem("orderData", JSON.stringify(orderData));
     setLocation("/frete");
   };
 
-  const isFormValid = Object.values(formData).every(val => val.length > 0);
+  const isFormValid = formData.nome && formData.email && formData.telefone && formData.cpf && 
+    formData.cep && formData.rua && formData.numero && formData.bairro && formData.cidade && formData.estado;
 
   return (
     <div className="min-h-screen bg-[#F5F5F5] flex flex-col font-sans">
@@ -103,15 +127,41 @@ export default function Endereco() {
               </div>
 
               <div className="grid gap-2">
-                <Label htmlFor="telefone">Telefone Celular</Label>
+                <Label htmlFor="email">E-mail</Label>
                 <Input 
-                  id="telefone" 
-                  name="telefone" 
-                  placeholder="(00) 00000-0000" 
-                  value={formData.telefone}
+                  id="email" 
+                  name="email" 
+                  type="email"
+                  placeholder="seu@email.com" 
+                  value={formData.email}
                   onChange={handleChange}
                   className="focus-visible:ring-[#EE4D2D]"
                 />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="grid gap-2">
+                  <Label htmlFor="telefone">Telefone</Label>
+                  <Input 
+                    id="telefone" 
+                    name="telefone" 
+                    placeholder="(00) 00000-0000" 
+                    value={formData.telefone}
+                    onChange={handleChange}
+                    className="focus-visible:ring-[#EE4D2D]"
+                  />
+                </div>
+                <div className="grid gap-2">
+                  <Label htmlFor="cpf">CPF</Label>
+                  <Input 
+                    id="cpf" 
+                    name="cpf" 
+                    placeholder="000.000.000-00" 
+                    value={formData.cpf}
+                    onChange={handleChange}
+                    className="focus-visible:ring-[#EE4D2D]"
+                  />
+                </div>
               </div>
             </div>
 
