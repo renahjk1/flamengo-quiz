@@ -40,8 +40,8 @@ export default function Parabens() {
                 <div className="absolute top-0 right-0 bg-[#EE4D2D] text-white text-xs font-bold px-2 py-1">
                   -100%
                 </div>
-                <div className="absolute bottom-0 left-0 bg-[#00bfa5] text-white text-[10px] font-bold px-1 flex items-center gap-1">
-                  <Truck size={10} /> FRETE GRÁTIS
+                <div className="absolute bottom-0 left-0 bg-[#EE4D2D] text-white text-[10px] font-bold px-1 flex items-center gap-1">
+                  <Truck size={10} /> ENVIO IMEDIATO
                 </div>
               </div>
               <CardContent className="p-4 flex-1 flex flex-col">
@@ -69,8 +69,8 @@ export default function Parabens() {
                 <div className="absolute top-0 right-0 bg-[#EE4D2D] text-white text-xs font-bold px-2 py-1">
                   -100%
                 </div>
-                <div className="absolute bottom-0 left-0 bg-[#00bfa5] text-white text-[10px] font-bold px-1 flex items-center gap-1">
-                  <Truck size={10} /> FRETE GRÁTIS
+                <div className="absolute bottom-0 left-0 bg-[#EE4D2D] text-white text-[10px] font-bold px-1 flex items-center gap-1">
+                  <Truck size={10} /> ENVIO IMEDIATO
                 </div>
               </div>
               <CardContent className="p-4 flex-1 flex flex-col">
@@ -98,8 +98,8 @@ export default function Parabens() {
                 <div className="absolute top-0 right-0 bg-[#EE4D2D] text-white text-xs font-bold px-2 py-1">
                   -100%
                 </div>
-                <div className="absolute bottom-0 left-0 bg-[#00bfa5] text-white text-[10px] font-bold px-1 flex items-center gap-1">
-                  <Truck size={10} /> FRETE GRÁTIS
+                <div className="absolute bottom-0 left-0 bg-[#EE4D2D] text-white text-[10px] font-bold px-1 flex items-center gap-1">
+                  <Truck size={10} /> ENVIO IMEDIATO
                 </div>
               </div>
               <CardContent className="p-4 flex-1 flex flex-col">

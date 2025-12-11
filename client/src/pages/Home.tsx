@@ -19,20 +19,15 @@ export default function Home() {
           />
         </div>
 
-        {/* Seção de Cupons */}
-        <div className="bg-white p-4 rounded-lg shadow-sm mb-6 flex items-center justify-between border-l-4 border-[#EE4D2D]">
-          <div className="flex items-center gap-4">
-            <div className="bg-[#EE4D2D]/10 p-3 rounded-full">
-              <Star className="text-[#EE4D2D]" fill="#EE4D2D" />
-            </div>
-            <div>
-              <h3 className="font-bold text-lg text-[#EE4D2D]">CUPOM TORCEDOR ATIVADO</h3>
-              <p className="text-gray-500 text-sm">Você ganhou 100% de desconto em 1 item selecionado</p>
-            </div>
+        {/* Seção de Cupons Compacta */}
+        <div className="bg-white p-3 rounded-lg shadow-sm mb-4 flex items-center gap-3 border-l-4 border-[#EE4D2D]">
+          <div className="bg-[#EE4D2D]/10 p-2 rounded-full shrink-0">
+            <Star className="text-[#EE4D2D] w-5 h-5" fill="#EE4D2D" />
           </div>
-          <Button className="bg-[#EE4D2D] hover:bg-[#d73211] text-white font-bold">
-            USAR AGORA
-          </Button>
+          <div className="flex-1">
+            <h3 className="font-bold text-sm text-[#EE4D2D] leading-tight">CUPOM TORCEDOR ATIVADO</h3>
+            <p className="text-gray-500 text-xs">100% de desconto aplicado</p>
+          </div>
         </div>
 
         {/* Categorias */}
@@ -55,8 +50,8 @@ export default function Home() {
                   <div className="absolute top-0 right-0 bg-[#EE4D2D] text-white text-xs font-bold px-2 py-1">
                     -100%
                   </div>
-                  <div className="absolute bottom-0 left-0 bg-[#00bfa5] text-white text-[10px] font-bold px-1 flex items-center gap-1">
-                    <Truck size={10} /> FRETE GRÁTIS
+                  <div className="absolute bottom-0 left-0 bg-[#EE4D2D] text-white text-[10px] font-bold px-1 flex items-center gap-1">
+                    <Truck size={10} /> ENVIO IMEDIATO
                   </div>
                 </div>
                 <CardContent className="p-3">
@@ -86,8 +81,8 @@ export default function Home() {
                   <div className="absolute top-0 right-0 bg-[#EE4D2D] text-white text-xs font-bold px-2 py-1">
                     -100%
                   </div>
-                  <div className="absolute bottom-0 left-0 bg-[#00bfa5] text-white text-[10px] font-bold px-1 flex items-center gap-1">
-                    <Truck size={10} /> FRETE GRÁTIS
+                  <div className="absolute bottom-0 left-0 bg-[#EE4D2D] text-white text-[10px] font-bold px-1 flex items-center gap-1">
+                    <Truck size={10} /> ENVIO IMEDIATO
                   </div>
                 </div>
                 <CardContent className="p-3">
@@ -117,8 +112,8 @@ export default function Home() {
                   <div className="absolute top-0 right-0 bg-[#EE4D2D] text-white text-xs font-bold px-2 py-1">
                     -100%
                   </div>
-                  <div className="absolute bottom-0 left-0 bg-[#00bfa5] text-white text-[10px] font-bold px-1 flex items-center gap-1">
-                    <Truck size={10} /> FRETE GRÁTIS
+                  <div className="absolute bottom-0 left-0 bg-[#EE4D2D] text-white text-[10px] font-bold px-1 flex items-center gap-1">
+                    <Truck size={10} /> ENVIO IMEDIATO
                   </div>
                 </div>
                 <CardContent className="p-3">
@@ -172,16 +167,7 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Banner Secundário */}
-        <div className="bg-gradient-to-r from-[#C3281E] to-black rounded-lg p-6 text-white text-center mb-8">
-          <h2 className="text-2xl font-bold mb-2">PARCERIA OFICIAL FLAMENGO X SHOPEE</h2>
-          <p className="mb-4 opacity-90">Resgate seu manto sagrado agora mesmo. Estoque limitado!</p>
-          <Link href="/parabens">
-            <Button className="bg-white text-[#C3281E] hover:bg-gray-100 font-bold px-8">
-              RESGATAR MEU PRÊMIO
-            </Button>
-          </Link>
-        </div>
+
       </main>
 
       {/* Footer Simples */}

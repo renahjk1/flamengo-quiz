@@ -144,14 +144,14 @@ export default function Produto() {
 
               {/* Frete */}
               <div className="mb-8">
-                <h3 className="text-sm text-gray-500 mb-2">Frete</h3>
+                <h3 className="text-sm text-gray-500 mb-2">Envio</h3>
                 <div className="flex items-start gap-3">
                   <Truck size={20} className="text-gray-500 mt-1" />
                   <div>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-800">Frete Grátis</span>
-                      <span className="bg-[#00bfa5] text-white text-[10px] font-bold px-1 rounded-sm">
-                        LIVRE
+                      <span className="text-sm text-gray-800">Envio Imediato</span>
+                      <span className="bg-[#EE4D2D] text-white text-[10px] font-bold px-1 rounded-sm">
+                        RÁPIDO
                       </span>
                     </div>
                     <p className="text-xs text-gray-500 mt-1">
