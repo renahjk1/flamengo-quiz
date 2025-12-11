@@ -21,3 +21,5 @@
 - [x] Reformular página NF1 com identidade Flamengo x Shopee
 - [x] Incluir página NF1 no repositório
 - [x] Criar página de pagamento PIX para NF1 (taxa de imposto R$25,19)
+
+- [x] Adicionar aviso de frete não gratuito (pedido não atingiu R$39,90)

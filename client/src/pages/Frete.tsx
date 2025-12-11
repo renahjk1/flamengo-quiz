@@ -1,7 +1,7 @@
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ChevronLeft, Truck } from "lucide-react";
+import { AlertTriangle, ChevronLeft, Truck } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "wouter";
 
@@ -71,6 +71,18 @@ export default function Frete() {
           </div>
 
           <div className="p-6">
+            {/* Aviso de frete não gratuito */}
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4 mb-4 flex items-start gap-3">
+              <AlertTriangle className="text-amber-500 flex-shrink-0 mt-0.5" size={20} />
+              <div>
+                <p className="text-sm font-semibold text-amber-800">Frete não gratuito</p>
+                <p className="text-xs text-amber-700 mt-1">
+                  Como seu pedido não atingiu o valor mínimo de <span className="font-bold">R$ 39,90</span>, o frete não será gratuito. 
+                  Selecione uma das opções de envio abaixo.
+                </p>
+              </div>
+            </div>
+
             <h2 className="text-sm font-bold text-gray-500 uppercase mb-4">Selecione a modalidade de entrega</h2>
             
             <div className="space-y-3">
