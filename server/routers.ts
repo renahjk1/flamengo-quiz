@@ -4,6 +4,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { createPixTransaction, getTransaction } from "./skalepay";
+import { sendConversionToUtmify } from "./utmify";
 
 export const appRouter = router({
   system: systemRouter,
@@ -112,6 +113,49 @@ export const appRouter = router({
           return {
             success: false,
             error: error instanceof Error ? error.message : "Erro ao verificar status",
+          };
+        }
+      }),
+
+    // Send conversion to UTMify when payment is confirmed
+    sendConversion: publicProcedure
+      .input(
+        z.object({
+          orderId: z.string(),
+          transactionId: z.string(),
+          amount: z.number(),
+          customer: z.object({
+            name: z.string(),
+            email: z.string(),
+            phone: z.string(),
+            cpf: z.string(),
+          }),
+          product: z.object({
+            name: z.string(),
+            price: z.number(),
+            quantity: z.number(),
+          }),
+          utm: z.object({
+            utm_source: z.string().optional(),
+            utm_medium: z.string().optional(),
+            utm_campaign: z.string().optional(),
+            utm_term: z.string().optional(),
+            utm_content: z.string().optional(),
+            src: z.string().optional(),
+            sck: z.string().optional(),
+          }).optional(),
+          paymentMethod: z.string(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        try {
+          const result = await sendConversionToUtmify(input);
+          return result;
+        } catch (error) {
+          console.error("UTMify conversion error:", error);
+          return {
+            success: false,
+            error: error instanceof Error ? error.message : "Erro ao enviar conversão",
           };
         }
       }),

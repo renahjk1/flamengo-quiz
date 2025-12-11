@@ -12,3 +12,5 @@
 - [x] Atualizar páginas para propagar UTMs
 - [x] Enviar UTMs para API SkalePay
 - [x] Implementar redirecionamento pós-pagamento para https://flamengo-quiz-production.up.railway.app/nf1
+
+- [x] Integrar API de conversão da UTMify para rastrear vendas

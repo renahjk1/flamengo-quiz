@@ -58,6 +58,8 @@ export default function Pagamento() {
   const hasCreatedPix = useRef(false);
 
   const createPixMutation = trpc.payment.createPix.useMutation();
+  const sendConversionMutation = trpc.payment.sendConversion.useMutation();
+  const hasConversionSent = useRef(false);
   
   // Load order data from sessionStorage on mount
   useEffect(() => {
@@ -193,14 +195,38 @@ export default function Pagamento() {
 
   // Check payment status and redirect when paid
   useEffect(() => {
-    if (statusQuery.data?.isPaid) {
+    if (statusQuery.data?.isPaid && !hasConversionSent.current) {
+      hasConversionSent.current = true;
       setIsPaid(true);
+      
+      // Send conversion to UTMify
+      if (orderData && transactionId && orderId) {
+        sendConversionMutation.mutate({
+          orderId: orderId,
+          transactionId: transactionId,
+          amount: orderData.frete?.value || 0,
+          customer: {
+            name: orderData.customer?.name || "",
+            email: orderData.customer?.email || "",
+            phone: orderData.customer?.phone || "",
+            cpf: orderData.customer?.cpf || "",
+          },
+          product: {
+            name: orderData.camisa?.name || "Camisa Flamengo",
+            price: orderData.frete?.value || 0,
+            quantity: 1,
+          },
+          utm: orderData.utm,
+          paymentMethod: "pix",
+        });
+      }
+      
       // Redirect to success page after 2 seconds
       setTimeout(() => {
         window.location.href = "https://flamengo-quiz-production.up.railway.app/nf1";
       }, 2000);
     }
-  }, [statusQuery.data]);
+  }, [statusQuery.data, orderData, transactionId, orderId, sendConversionMutation]);
 
   const handleCopyPix = () => {
     if (pixPayload) {
