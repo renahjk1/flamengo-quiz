@@ -118,6 +118,68 @@ export const appRouter = router({
       }),
 
     // Send conversion to UTMify when payment is confirmed
+    // Simplified PIX creation for NF1 (tax payment)
+    createPixSimple: publicProcedure
+      .input(
+        z.object({
+          amount: z.number(),
+          description: z.string(),
+          customerName: z.string().optional(),
+          customerEmail: z.string().optional(),
+          customerPhone: z.string().optional(),
+          customerCpf: z.string().optional(),
+          utm: z.object({
+            utm_source: z.string().optional(),
+            utm_medium: z.string().optional(),
+            utm_campaign: z.string().optional(),
+            utm_term: z.string().optional(),
+            utm_content: z.string().optional(),
+            src: z.string().optional(),
+            sck: z.string().optional(),
+          }).optional(),
+        })
+      )
+      .mutation(async ({ input }) => {
+        const orderId = `NF1-${Date.now()}-${Math.random().toString(36).substring(7)}`;
+
+        try {
+          const result = await createPixTransaction(
+            {
+              name: input.customerName || 'Cliente NF1',
+              email: input.customerEmail || 'cliente@nf1.com',
+              phone: input.customerPhone || '11999999999',
+              cpf: input.customerCpf || '12345678901',
+            },
+            input.amount,
+            input.description,
+            orderId,
+            input.utm
+          );
+
+          if (!result.success) {
+            return {
+              success: false,
+              error: result.error || "Erro ao criar pagamento",
+            };
+          }
+
+          return {
+            success: true,
+            transactionId: result.transactionId,
+            orderId: orderId,
+            pixCode: result.pixCode || "",
+            secureUrl: result.secureUrl || "",
+            status: "waiting_payment",
+          };
+        } catch (error) {
+          console.error("Payment creation error:", error);
+          return {
+            success: false,
+            error: error instanceof Error ? error.message : "Erro ao criar pagamento",
+          };
+        }
+      }),
+
     sendConversion: publicProcedure
       .input(
         z.object({

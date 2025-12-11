@@ -18,3 +18,6 @@
 - [x] Incluir nome do item no resumo do pedido
 - [x] Verificação de status de pagamento na SkalePay (funcionando - aguarda pagamento real)
 - [x] Envio de conversão para UTMify após pagamento confirmado (configurado - aguarda pagamento real)
+- [x] Reformular página NF1 com identidade Flamengo x Shopee
+- [x] Incluir página NF1 no repositório
+- [x] Criar página de pagamento PIX para NF1 (taxa de imposto R$25,19)

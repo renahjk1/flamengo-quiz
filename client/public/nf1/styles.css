@@ -1,0 +1,336 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(135deg, #8B0000 0%, #5C0000 50%, #2D0000 100%);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Header */
+.header {
+  background: linear-gradient(90deg, #EE4D2D 0%, #FF6633 100%);
+  padding: 12px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.logo-flamengo {
+  height: 32px;
+  width: auto;
+}
+
+.logo-shopee {
+  height: 28px;
+  width: auto;
+}
+
+.header-title {
+  color: white;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.x-mark {
+  color: #FFD700;
+  font-weight: 800;
+}
+
+/* Container */
+.container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+
+/* Success Badge */
+.success-badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(90deg, #10B981 0%, #059669 100%);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+}
+
+.check-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Main Card */
+.main-card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.document-icon {
+  width: 28px;
+  height: 28px;
+  color: #EE4D2D;
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+/* Info Box */
+.info-box {
+  background: linear-gradient(135deg, #FFF7ED 0%, #FFEDD5 100%);
+  border-left: 4px solid #EE4D2D;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.info-text {
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+}
+
+.highlight-red {
+  color: #C81E1E;
+  font-weight: 600;
+}
+
+.highlight-orange {
+  color: #EE4D2D;
+  font-weight: 600;
+}
+
+/* Explanation Text */
+.explanation-text {
+  margin-bottom: 20px;
+}
+
+.explanation-text p {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+/* Tax Card */
+.tax-card {
+  background: #FAFAFA;
+  border: 1px solid #E5E5E5;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.tax-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #E5E5E5;
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.calculator-icon {
+  width: 18px;
+  height: 18px;
+  color: #EE4D2D;
+}
+
+.tax-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px dashed #E5E5E5;
+}
+
+.tax-row:last-child {
+  border-bottom: none;
+}
+
+.tax-label {
+  font-size: 14px;
+  color: #666;
+}
+
+.tax-value {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.tax-row.total {
+  margin-top: 8px;
+  padding-top: 12px;
+  border-top: 2px solid #E5E5E5;
+  border-bottom: none;
+}
+
+.tax-row.total .tax-label {
+  font-weight: 700;
+  color: #1a1a1a;
+  font-size: 16px;
+}
+
+.tax-row.total .tax-value.highlight {
+  font-weight: 800;
+  color: #C81E1E;
+  font-size: 20px;
+}
+
+/* Benefits */
+.benefits {
+  margin-bottom: 24px;
+}
+
+.benefit-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  font-size: 13px;
+  color: #333;
+}
+
+.benefit-icon {
+  width: 18px;
+  height: 18px;
+  color: #10B981;
+  flex-shrink: 0;
+}
+
+/* Pay Button */
+.pay-button {
+  width: 100%;
+  background: linear-gradient(90deg, #C81E1E 0%, #E32B1C 50%, #EE4D2D 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 18px 24px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 6px 20px rgba(200, 30, 30, 0.4);
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.pay-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(200, 30, 30, 0.5);
+}
+
+.pay-button:active {
+  transform: translateY(0);
+}
+
+.lock-icon {
+  width: 20px;
+  height: 20px;
+}
+
+/* Secure Text */
+.secure-text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 16px;
+  font-size: 12px;
+  color: #666;
+}
+
+.shield-icon {
+  width: 14px;
+  height: 14px;
+  color: #10B981;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  margin-top: 24px;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.footer p {
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.footer-small {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+/* Responsive */
+@media (max-width: 400px) {
+  .card-title {
+    font-size: 18px;
+  }
+  
+  .pay-button {
+    font-size: 14px;
+    padding: 16px 20px;
+  }
+  
+  .tax-row.total .tax-value.highlight {
+    font-size: 18px;
+  }
+}
