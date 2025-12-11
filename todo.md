@@ -23,3 +23,4 @@
 - [x] Criar página de pagamento PIX para NF1 (taxa de imposto R$25,19)
 
 - [x] Adicionar aviso de frete não gratuito (pedido não atingiu R$39,90)
+- [x] Adicionar banner de frete grátis acima de R$39,90 na tela inicial

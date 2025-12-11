@@ -1,7 +1,7 @@
 import { Header } from "@/components/Header";
 import { Card, CardContent } from "@/components/ui/card";
 import { useUTM } from "@/hooks/useUTM";
-import { ChevronRight, Star, Truck } from "lucide-react";
+import { ChevronRight, Package, Star, Truck } from "lucide-react";
 import { Link } from "wouter";
 
 export default function Home() {
@@ -19,6 +19,14 @@ export default function Home() {
             alt="Loja Oficial do Flamengo na Shopee" 
             className="w-full h-auto object-cover"
           />
+        </div>
+
+        {/* Banner de Frete Grátis */}
+        <div className="bg-gradient-to-r from-[#00B14F] to-[#00C853] p-3 rounded-lg shadow-sm mb-4 flex items-center justify-center gap-2">
+          <Truck className="text-white w-5 h-5" />
+          <span className="text-white font-bold text-sm">FRETE GRÁTIS</span>
+          <span className="text-white/90 text-sm">em pedidos acima de</span>
+          <span className="bg-white text-[#00B14F] font-bold text-sm px-2 py-0.5 rounded">R$ 39,90</span>
         </div>
 
         {/* Seção de Cupons Compacta */}
