@@ -21,12 +21,10 @@ export default function Home() {
           />
         </div>
 
-        {/* Banner de Frete Grátis */}
-        <div className="bg-gradient-to-r from-[#00B14F] to-[#00C853] p-3 rounded-lg shadow-sm mb-4 flex items-center justify-center gap-2">
-          <Truck className="text-white w-5 h-5" />
-          <span className="text-white font-bold text-sm">FRETE GRÁTIS</span>
-          <span className="text-white/90 text-sm">em pedidos acima de</span>
-          <span className="bg-white text-[#00B14F] font-bold text-sm px-2 py-0.5 rounded">R$ 39,90</span>
+        {/* Banner de Frete Grátis - Discreto */}
+        <div className="bg-[#00B14F] py-1.5 px-3 rounded mb-3 flex items-center justify-center gap-1.5">
+          <Truck className="text-white w-3.5 h-3.5" />
+          <span className="text-white text-xs"><span className="font-semibold">Frete grátis</span> em pedidos acima de <span className="font-bold">R$ 39,90</span></span>
         </div>
 
         {/* Seção de Cupons Compacta */}

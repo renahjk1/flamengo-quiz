@@ -24,3 +24,4 @@
 
 - [x] Adicionar aviso de frete não gratuito (pedido não atingiu R$39,90)
 - [x] Adicionar banner de frete grátis acima de R$39,90 na tela inicial
+- [x] Ajustar banner de frete grátis para versão mais fina e discreta
