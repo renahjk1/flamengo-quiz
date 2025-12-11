@@ -35,7 +35,7 @@ export default function Start() {
         
         {/* Descrição */}
         <div className="text-gray-700 text-sm md:text-base leading-relaxed mb-6 text-justify px-2">
-          O <span className="font-bold text-[#dc2626]">Flamengo</span> em parceria com a <span className="font-bold text-[#EE4D2D]">Shopee</span> está distribuindo 3 mil camisetas através de um jogo de perguntas e respostas e os torcedores que acertar <span className="font-bold text-[#dc2626]">todas as perguntas</span> irá ganhar uma camiseta oficial de graça.
+          O <span className="font-bold text-[#dc2626]">Flamengo</span> em parceria com a <span className="font-bold text-[#EE4D2D]">Shopee</span> está distribuindo 3 mil camisetas através de um jogo de perguntas e respostas e os torcedores que acertarem <span className="font-bold text-[#dc2626]">todas as perguntas</span> irá ganhar uma camiseta oficial de graça.
         </div>
         
         {/* Destaque do Prêmio */}

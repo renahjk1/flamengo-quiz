@@ -5,6 +5,36 @@ import { CheckCircle, ChevronLeft, Copy, Loader2, QrCode, RefreshCw } from "luci
 import { useEffect, useState } from "react";
 import { Link, useLocation } from "wouter";
 
+interface OrderData {
+  customer?: {
+    name: string;
+    email: string;
+    phone: string;
+    cpf: string;
+  };
+  address?: {
+    cep: string;
+    street: string;
+    number: string;
+    complement?: string;
+    neighborhood: string;
+    city: string;
+    state: string;
+  };
+  frete?: {
+    type: string;
+    name: string;
+    time: string;
+    value: number;
+  };
+  camisa?: {
+    id: string;
+    name: string;
+    size: string;
+    image: string;
+  };
+}
+
 export default function Pagamento() {
   const [, setLocation] = useLocation();
   const [copied, setCopied] = useState(false);
@@ -14,9 +44,17 @@ export default function Pagamento() {
   const [isCreating, setIsCreating] = useState(true);
   const [error, setError] = useState<string>("");
   const [isPaid, setIsPaid] = useState(false);
+  const [orderData, setOrderData] = useState<OrderData>({});
+  const [dataLoaded, setDataLoaded] = useState(false);
 
-  // Get order data from sessionStorage
-  const orderData = typeof window !== "undefined" ? JSON.parse(sessionStorage.getItem("orderData") || "{}") : {};
+  // Load order data from sessionStorage
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const data = JSON.parse(sessionStorage.getItem("orderData") || "{}");
+      setOrderData(data);
+      setDataLoaded(true);
+    }
+  }, []);
 
   const createPixMutation = trpc.payment.createPix.useMutation();
   const statusQuery = trpc.payment.checkStatus.useQuery(
@@ -27,9 +65,11 @@ export default function Pagamento() {
     }
   );
 
-  // Create PIX on mount
+  // Create PIX when data is loaded
   useEffect(() => {
-    if (!orderData.customer || !orderData.frete) {
+    if (!dataLoaded) return;
+    
+    if (!orderData.customer || !orderData.frete || !orderData.address) {
       setError("Dados do pedido não encontrados. Por favor, refaça o processo.");
       setIsCreating(false);
       return;
@@ -38,9 +78,17 @@ export default function Pagamento() {
     createPixMutation.mutate(
       {
         customer: orderData.customer,
-        address: orderData.address,
-        freteType: orderData.frete.type,
-        freteValue: orderData.frete.value,
+        address: {
+          cep: orderData.address.cep || "",
+          street: orderData.address.street || "",
+          number: orderData.address.number || "",
+          complement: orderData.address.complement || "",
+          neighborhood: orderData.address.neighborhood || "",
+          city: orderData.address.city || "",
+          state: orderData.address.state || "",
+        },
+        freteType: orderData.frete.type as "sedex" | "pac" | "transportadora",
+        freteValue: orderData.frete.value || 0,
         camisaId: orderData.camisa?.id || "1",
         camisaName: orderData.camisa?.name || "Camisa Flamengo",
         camisaSize: orderData.camisa?.size || "M",
@@ -62,7 +110,7 @@ export default function Pagamento() {
         },
       }
     );
-  }, []);
+  }, [dataLoaded, orderData]);
 
   // Check payment status
   useEffect(() => {
