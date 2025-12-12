@@ -1,7 +1,7 @@
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, AlertTriangle, Truck } from "lucide-react";
+import { Truck } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 
@@ -24,19 +24,10 @@ export default function Parabens() {
       <Header />
       
       <main className="container mx-auto px-4 py-6 flex-1">
-        {/* Mensagem de Sucesso */}
-        <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center mb-8 animate-in fade-in slide-in-from-top-4 duration-700">
-          <div className="flex justify-center mb-4">
-            <div className="bg-green-100 p-3 rounded-full">
-              <CheckCircle size={48} className="text-green-600" />
-            </div>
-          </div>
-          <h1 className="text-2xl font-bold text-green-800 mb-2">PARABÉNS, {firstName.toUpperCase()}! 🎉</h1>
-          <p className="text-green-700">
-            Você é o ganhador <span className="font-bold">#{winnerNumber}</span> de 3.000 e ganhou uma camisa oficial do Flamengo totalmente grátis!
-          </p>
-          <p className="text-sm text-green-600 mt-2 font-medium">
-            Escolha seu modelo abaixo para resgatar agora mesmo.
+        {/* Mensagem de Sucesso - Versão mais discreta */}
+        <div className="bg-white border border-gray-200 rounded-lg p-4 mb-6 shadow-sm">
+          <p className="text-gray-700 text-center text-sm">
+            <span className="font-semibold text-[#EE4D2D]">{firstName}</span>, você é o ganhador <span className="font-bold">#{winnerNumber}</span> de 3.000! Escolha seu modelo abaixo.
           </p>
         </div>
 
@@ -54,6 +45,9 @@ export default function Parabens() {
                 <div className="absolute top-0 right-0 bg-[#EE4D2D] text-white text-xs font-bold px-2 py-1">
                   -100%
                 </div>
+                <div className="absolute top-0 left-0 bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5">
+                  🔥 3 unid.
+                </div>
                 <div className="absolute bottom-0 left-0 bg-[#EE4D2D] text-white text-[10px] font-bold px-1 flex items-center gap-1">
                   <Truck size={10} /> ENVIO IMEDIATO
                 </div>
@@ -66,10 +60,6 @@ export default function Parabens() {
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-xs text-gray-400 line-through">R$ 399,90</span>
                     <span className="text-lg font-bold text-[#EE4D2D]">R$ 0,00</span>
-                  </div>
-                  <div className="flex items-center gap-1 mb-2 text-amber-600 bg-amber-50 px-2 py-1 rounded text-xs font-medium">
-                    <AlertTriangle size={12} />
-                    <span>Apenas <strong>4 unidades</strong> disponíveis</span>
                   </div>
                   <Button className="w-full bg-[#EE4D2D] hover:bg-[#d73211] text-white font-bold h-9 text-xs">
                     RESGATAR AGORA
@@ -87,6 +77,9 @@ export default function Parabens() {
                 <div className="absolute top-0 right-0 bg-[#EE4D2D] text-white text-xs font-bold px-2 py-1">
                   -100%
                 </div>
+                <div className="absolute top-0 left-0 bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5">
+                  🔥 7 unid.
+                </div>
                 <div className="absolute bottom-0 left-0 bg-[#EE4D2D] text-white text-[10px] font-bold px-1 flex items-center gap-1">
                   <Truck size={10} /> ENVIO IMEDIATO
                 </div>
@@ -99,10 +92,6 @@ export default function Parabens() {
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-xs text-gray-400 line-through">R$ 399,90</span>
                     <span className="text-lg font-bold text-[#EE4D2D]">R$ 0,00</span>
-                  </div>
-                  <div className="flex items-center gap-1 mb-2 text-amber-600 bg-amber-50 px-2 py-1 rounded text-xs font-medium">
-                    <AlertTriangle size={12} />
-                    <span>Apenas <strong>9 unidades</strong> disponíveis</span>
                   </div>
                   <Button className="w-full bg-[#EE4D2D] hover:bg-[#d73211] text-white font-bold h-9 text-xs">
                     RESGATAR AGORA
@@ -120,6 +109,9 @@ export default function Parabens() {
                 <div className="absolute top-0 right-0 bg-[#EE4D2D] text-white text-xs font-bold px-2 py-1">
                   -100%
                 </div>
+                <div className="absolute top-0 left-0 bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5">
+                  🔥 34 unid.
+                </div>
                 <div className="absolute bottom-0 left-0 bg-[#EE4D2D] text-white text-[10px] font-bold px-1 flex items-center gap-1">
                   <Truck size={10} /> ENVIO IMEDIATO
                 </div>
@@ -132,10 +124,6 @@ export default function Parabens() {
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-xs text-gray-400 line-through">R$ 429,90</span>
                     <span className="text-lg font-bold text-[#EE4D2D]">R$ 0,00</span>
-                  </div>
-                  <div className="flex items-center gap-1 mb-2 text-amber-600 bg-amber-50 px-2 py-1 rounded text-xs font-medium">
-                    <AlertTriangle size={12} />
-                    <span>Apenas <strong>31 unidades</strong> disponíveis</span>
                   </div>
                   <Button className="w-full bg-[#EE4D2D] hover:bg-[#d73211] text-white font-bold h-9 text-xs">
                     RESGATAR AGORA

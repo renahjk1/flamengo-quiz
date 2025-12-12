@@ -33,3 +33,5 @@
 - [x] Investigar e corrigir envio de vendas aprovadas para UTMify
 - [x] Preencher nome e CPF automaticamente na tela de endereço
 - [x] Adicionar unidades disponíveis nas camisetas da Home (escassez)
+- [x] Ajustar mensagem de parabéns para ser menos chamativa
+- [x] Mover unidades disponíveis para cima das camisetas (3, 7, 34 unidades)
