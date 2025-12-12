@@ -35,3 +35,4 @@
 - [x] Adicionar unidades disponíveis nas camisetas da Home (escassez)
 - [x] Ajustar mensagem de parabéns para ser menos chamativa
 - [x] Mover unidades disponíveis para cima das camisetas (3, 7, 34 unidades)
+- [x] Implementar pop-ups de prova social (Ganhador #XXXX Nome Sobrenome de UF acabou de resgatar)
