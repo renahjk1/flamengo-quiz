@@ -29,3 +29,7 @@
 - [x] Criar página de cadastro (Nome + CPF) antes do Quiz
 - [x] Adicionar número do ganhador (2.971 de 3.000) na tela Home
 - [x] Personalizar mensagens com nome do usuário
+- [x] Corrigir logo Shopee x Flamengo na tela de cadastro
+- [x] Investigar e corrigir envio de vendas aprovadas para UTMify
+- [x] Preencher nome e CPF automaticamente na tela de endereço
+- [x] Adicionar unidades disponíveis nas camisetas da Home (escassez)

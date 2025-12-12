@@ -258,7 +258,12 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         try {
-          const result = await sendConversionToUtmify(input);
+          // IMPORTANT: Send with status 'paid' to mark as approved conversion
+          const result = await sendConversionToUtmify({
+            ...input,
+            status: 'paid',
+          });
+          console.log('UTMify: Conversão PAGA enviada com sucesso para orderId:', input.orderId);
           return result;
         } catch (error) {
           console.error("UTMify conversion error:", error);

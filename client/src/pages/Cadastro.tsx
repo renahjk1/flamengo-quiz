@@ -63,17 +63,12 @@ export default function Cadastro() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-[#8B0000] to-[#5C0000] flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md">
-        {/* Header com logos */}
-        <div className="flex items-center justify-center gap-4 mb-6">
+        {/* Header com logo */}
+        <div className="flex items-center justify-center mb-6">
           <img
-            src="/images/flamengo-logo.png"
-            alt="Flamengo"
-            className="w-16 h-16 object-contain"
-          />
-          <img
-            src="/images/shopee-logo.png"
-            alt="Shopee"
-            className="w-16 h-16 object-contain"
+            src="/images/logo-fla-shopee.png"
+            alt="Flamengo x Shopee"
+            className="h-16 object-contain"
           />
         </div>
 

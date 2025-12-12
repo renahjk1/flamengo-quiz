@@ -1,7 +1,7 @@
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { CheckCircle, Star, Truck } from "lucide-react";
+import { CheckCircle, AlertTriangle, Truck } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link } from "wouter";
 
@@ -67,6 +67,10 @@ export default function Parabens() {
                     <span className="text-xs text-gray-400 line-through">R$ 399,90</span>
                     <span className="text-lg font-bold text-[#EE4D2D]">R$ 0,00</span>
                   </div>
+                  <div className="flex items-center gap-1 mb-2 text-amber-600 bg-amber-50 px-2 py-1 rounded text-xs font-medium">
+                    <AlertTriangle size={12} />
+                    <span>Apenas <strong>4 unidades</strong> disponíveis</span>
+                  </div>
                   <Button className="w-full bg-[#EE4D2D] hover:bg-[#d73211] text-white font-bold h-9 text-xs">
                     RESGATAR AGORA
                   </Button>
@@ -96,6 +100,10 @@ export default function Parabens() {
                     <span className="text-xs text-gray-400 line-through">R$ 399,90</span>
                     <span className="text-lg font-bold text-[#EE4D2D]">R$ 0,00</span>
                   </div>
+                  <div className="flex items-center gap-1 mb-2 text-amber-600 bg-amber-50 px-2 py-1 rounded text-xs font-medium">
+                    <AlertTriangle size={12} />
+                    <span>Apenas <strong>9 unidades</strong> disponíveis</span>
+                  </div>
                   <Button className="w-full bg-[#EE4D2D] hover:bg-[#d73211] text-white font-bold h-9 text-xs">
                     RESGATAR AGORA
                   </Button>
@@ -124,6 +132,10 @@ export default function Parabens() {
                   <div className="flex items-center gap-2 mb-2">
                     <span className="text-xs text-gray-400 line-through">R$ 429,90</span>
                     <span className="text-lg font-bold text-[#EE4D2D]">R$ 0,00</span>
+                  </div>
+                  <div className="flex items-center gap-1 mb-2 text-amber-600 bg-amber-50 px-2 py-1 rounded text-xs font-medium">
+                    <AlertTriangle size={12} />
+                    <span>Apenas <strong>31 unidades</strong> disponíveis</span>
                   </div>
                   <Button className="w-full bg-[#EE4D2D] hover:bg-[#d73211] text-white font-bold h-9 text-xs">
                     RESGATAR AGORA

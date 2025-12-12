@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { getUTMFromStorage } from "@/hooks/useUTM";
 import { ChevronLeft, MapPin, Loader2 } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 
 export default function Endereco() {
@@ -23,6 +23,34 @@ export default function Endereco() {
     cidade: "",
     estado: ""
   });
+
+  // Carregar nome e CPF do cadastro inicial
+  useEffect(() => {
+    try {
+      const userData = sessionStorage.getItem("userData");
+      if (userData) {
+        const { nome, cpf } = JSON.parse(userData);
+        if (nome || cpf) {
+          setFormData(prev => ({
+            ...prev,
+            nome: nome || prev.nome,
+            cpf: cpf ? formatCPF(cpf) : prev.cpf,
+          }));
+        }
+      }
+    } catch (error) {
+      console.error("Erro ao carregar dados do usuário:", error);
+    }
+  }, []);
+
+  // Função para formatar CPF
+  const formatCPF = (value: string) => {
+    const numbers = value.replace(/\D/g, "").slice(0, 11);
+    if (numbers.length <= 3) return numbers;
+    if (numbers.length <= 6) return `${numbers.slice(0, 3)}.${numbers.slice(3)}`;
+    if (numbers.length <= 9) return `${numbers.slice(0, 3)}.${numbers.slice(3, 6)}.${numbers.slice(6)}`;
+    return `${numbers.slice(0, 3)}.${numbers.slice(3, 6)}.${numbers.slice(6, 9)}-${numbers.slice(9)}`;
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
