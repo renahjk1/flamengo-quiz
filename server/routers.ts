@@ -73,6 +73,27 @@ export const appRouter = router({
             };
           }
 
+          // Send to UTMify with waiting_payment status
+          try {
+            await sendConversionToUtmify({
+              orderId: orderId,
+              transactionId: result.transactionId || '',
+              amount: input.freteValue,
+              customer: input.customer,
+              product: {
+                name: input.camisaName,
+                price: input.freteValue,
+                quantity: 1,
+              },
+              utm: input.utm,
+              paymentMethod: 'pix',
+              status: 'waiting_payment',
+            });
+            console.log('UTMify: PIX gerado enviado com sucesso');
+          } catch (utmifyError) {
+            console.error('UTMify error (non-blocking):', utmifyError);
+          }
+
           return {
             success: true,
             transactionId: result.transactionId,
@@ -161,6 +182,32 @@ export const appRouter = router({
               success: false,
               error: result.error || "Erro ao criar pagamento",
             };
+          }
+
+          // Send to UTMify with waiting_payment status for NF1
+          try {
+            await sendConversionToUtmify({
+              orderId: orderId,
+              transactionId: result.transactionId || '',
+              amount: input.amount,
+              customer: {
+                name: input.customerName || 'Cliente NF1',
+                email: input.customerEmail || 'cliente@nf1.com',
+                phone: input.customerPhone || '11999999999',
+                cpf: input.customerCpf || '12345678901',
+              },
+              product: {
+                name: input.description,
+                price: input.amount,
+                quantity: 1,
+              },
+              utm: input.utm,
+              paymentMethod: 'pix',
+              status: 'waiting_payment',
+            });
+            console.log('UTMify: PIX NF1 gerado enviado com sucesso');
+          } catch (utmifyError) {
+            console.error('UTMify error (non-blocking):', utmifyError);
           }
 
           return {

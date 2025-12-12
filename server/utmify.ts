@@ -33,6 +33,7 @@ interface ConversionData {
   product: ProductData;
   utm?: UTMParams;
   paymentMethod: string;
+  status?: 'waiting_payment' | 'paid' | 'refused' | 'refunded' | 'chargedback';
 }
 
 export async function sendConversionToUtmify(data: ConversionData): Promise<{ success: boolean; error?: string }> {
@@ -61,11 +62,11 @@ export async function sendConversionToUtmify(data: ConversionData): Promise<{ su
     orderId: data.orderId,
     platform: "custom",
     paymentMethod: "pix", // credit_card, boleto, pix, paypal, free_price, unknown
-    status: "paid", // waiting_payment, paid, refused, refunded, chargedback
+    status: data.status || "paid", // waiting_payment, paid, refused, refunded, chargedback
     createdAt: now,
     
-    // Approval date (now, since payment was just confirmed)
-    approvedDate: now,
+    // Approval date (only if paid)
+    approvedDate: data.status === 'paid' || !data.status ? now : null,
     refundedAt: null,
     
     // Customer data
