@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { CheckCircle } from "lucide-react";
+import { useLocation } from "wouter";
 
 // Lista de nomes e sobrenomes brasileiros comuns
 const nomes = [
@@ -30,6 +31,7 @@ interface SocialProofPopupProps {
 }
 
 export function SocialProofPopup({ minInterval = 8000, maxInterval = 15000 }: SocialProofPopupProps) {
+  const [location] = useLocation();
   const [visible, setVisible] = useState(false);
   const [notification, setNotification] = useState({
     numero: 2943,
@@ -37,6 +39,12 @@ export function SocialProofPopup({ minInterval = 8000, maxInterval = 15000 }: So
     sobrenome: "Ferreira",
     estado: "SC"
   });
+
+  // Lista de páginas onde o pop-up NÃO deve aparecer (antes do quiz)
+  const pagesBeforeQuiz = ["/", "/cadastro", "/quiz", "/loading"];
+  
+  // Verificar se o usuário já completou o quiz
+  const shouldShowPopup = !pagesBeforeQuiz.includes(location);
 
   const generateNotification = () => {
     const nome = nomes[Math.floor(Math.random() * nomes.length)];
@@ -48,6 +56,12 @@ export function SocialProofPopup({ minInterval = 8000, maxInterval = 15000 }: So
   };
 
   useEffect(() => {
+    // Só iniciar os pop-ups se estiver nas páginas permitidas
+    if (!shouldShowPopup) {
+      setVisible(false);
+      return;
+    }
+
     // Mostrar primeiro pop-up após 5 segundos
     const initialTimeout = setTimeout(() => {
       setNotification(generateNotification());
@@ -55,10 +69,10 @@ export function SocialProofPopup({ minInterval = 8000, maxInterval = 15000 }: So
     }, 5000);
 
     return () => clearTimeout(initialTimeout);
-  }, []);
+  }, [shouldShowPopup]);
 
   useEffect(() => {
-    if (!visible) return;
+    if (!visible || !shouldShowPopup) return;
 
     // Esconder após 4 segundos
     const hideTimeout = setTimeout(() => {
@@ -76,7 +90,12 @@ export function SocialProofPopup({ minInterval = 8000, maxInterval = 15000 }: So
       clearTimeout(hideTimeout);
       clearTimeout(showTimeout);
     };
-  }, [visible, minInterval, maxInterval]);
+  }, [visible, minInterval, maxInterval, shouldShowPopup]);
+
+  // Não renderizar se não deve mostrar pop-up
+  if (!shouldShowPopup) {
+    return null;
+  }
 
   return (
     <div

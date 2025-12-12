@@ -46,8 +46,8 @@ export default function Cadastro() {
     
     if (!validateForm()) return;
 
-    // Gerar número do ganhador (entre 2950 e 2995 para parecer real)
-    const winnerNumber = Math.floor(Math.random() * 45) + 2950;
+    // Número do ganhador fixo em 2956 (sobram exatas 44 camisetas)
+    const winnerNumber = 2956;
     
     // Salvar dados no sessionStorage
     sessionStorage.setItem("userData", JSON.stringify({

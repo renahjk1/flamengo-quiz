@@ -20,32 +20,18 @@ export default function Home() {
   
   // Pegar primeiro nome
   const firstName = userData?.nome?.split(" ")[0] || "Torcedor";
-  const winnerNumber = userData?.winnerNumber || 2971;
+  const winnerNumber = userData?.winnerNumber || 2956;
   
   return (
     <div className="min-h-screen bg-[#F5F5F5] flex flex-col font-sans">
       <Header />
       
       <main className="container mx-auto px-4 py-6 flex-1">
-        {/* Banner de Parabéns - Ganhador */}
-        <div className="bg-gradient-to-r from-[#C4161C] to-[#8B0000] rounded-lg p-4 mb-4 shadow-lg">
-          <div className="flex items-center gap-3">
-            <div className="bg-yellow-400 p-2 rounded-full shrink-0">
-              <Trophy className="w-6 h-6 text-[#8B0000]" />
-            </div>
-            <div className="flex-1">
-              <p className="text-yellow-400 font-bold text-lg">
-                Parabéns, {firstName}! 🎉
-              </p>
-              <p className="text-white text-sm">
-                Você é o ganhador <span className="font-bold text-yellow-400">#{winnerNumber}</span> de <span className="font-bold">3.000</span>
-              </p>
-            </div>
-          </div>
-          <div className="mt-3 bg-white/10 rounded p-2 flex items-center justify-center gap-2">
-            <Gift className="w-4 h-4 text-yellow-400" />
-            <span className="text-white text-xs">Restam apenas <span className="font-bold text-yellow-400">{3000 - winnerNumber}</span> camisetas!</span>
-          </div>
+        {/* Banner de Parabéns - Ganhador (Versão Discreta) */}
+        <div className="bg-white border border-gray-200 rounded-lg p-3 mb-4 shadow-sm">
+          <p className="text-gray-700 text-center text-sm">
+            <span className="font-semibold text-[#EE4D2D]">{firstName}</span>, você é o ganhador <span className="font-bold">#{winnerNumber}</span> de 3.000! Restam <span className="font-bold text-[#EE4D2D]">{3000 - winnerNumber}</span> camisetas.
+          </p>
         </div>
 
         {/* Banner Principal */}
@@ -94,6 +80,9 @@ export default function Home() {
                   <div className="absolute top-0 right-0 bg-[#EE4D2D] text-white text-xs font-bold px-2 py-1">
                     -100%
                   </div>
+                  <div className="absolute top-0 left-0 bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5">
+                    🔥 3 unid.
+                  </div>
                   <div className="absolute bottom-0 left-0 bg-[#EE4D2D] text-white text-[10px] font-bold px-1 flex items-center gap-1">
                     <Truck size={10} /> ENVIO IMEDIATO
                   </div>
@@ -125,6 +114,9 @@ export default function Home() {
                   <div className="absolute top-0 right-0 bg-[#EE4D2D] text-white text-xs font-bold px-2 py-1">
                     -100%
                   </div>
+                  <div className="absolute top-0 left-0 bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5">
+                    🔥 7 unid.
+                  </div>
                   <div className="absolute bottom-0 left-0 bg-[#EE4D2D] text-white text-[10px] font-bold px-1 flex items-center gap-1">
                     <Truck size={10} /> ENVIO IMEDIATO
                   </div>
@@ -155,6 +147,9 @@ export default function Home() {
                   <img src="/images/camisa3.webp" alt="Camisa III 2025" className="w-full aspect-square object-contain bg-gray-50 p-2" />
                   <div className="absolute top-0 right-0 bg-[#EE4D2D] text-white text-xs font-bold px-2 py-1">
                     -100%
+                  </div>
+                  <div className="absolute top-0 left-0 bg-amber-500 text-white text-[10px] font-bold px-1.5 py-0.5">
+                    🔥 34 unid.
                   </div>
                   <div className="absolute bottom-0 left-0 bg-[#EE4D2D] text-white text-[10px] font-bold px-1 flex items-center gap-1">
                     <Truck size={10} /> ENVIO IMEDIATO

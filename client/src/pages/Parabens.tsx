@@ -17,7 +17,7 @@ export default function Parabens() {
   
   // Pegar primeiro nome
   const firstName = userData?.nome?.split(" ")[0] || "Torcedor";
-  const winnerNumber = userData?.winnerNumber || 2971;
+  const winnerNumber = userData?.winnerNumber || 2956;
   
   return (
     <div className="min-h-screen bg-[#F5F5F5] flex flex-col font-sans">
