@@ -12,6 +12,7 @@ import Pagamento from "./pages/Pagamento";
 import Parabens from "./pages/Parabens";
 import Produto from "./pages/Produto";
 import Quiz from "./pages/Quiz";
+import Cadastro from "./pages/Cadastro";
 import Start from "./pages/Start";
 
 function Router() {
@@ -19,6 +20,7 @@ function Router() {
   return (
     <Switch>
       <Route path={"/"} component={Start} />
+      <Route path={"/cadastro"} component={Cadastro} />
       <Route path={"/quiz"} component={Quiz} />
       <Route path={"/loading"} component={Loading} />
       <Route path={"/home"} component={Home} />

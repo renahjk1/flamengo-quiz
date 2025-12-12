@@ -2,9 +2,23 @@ import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { CheckCircle, Star, Truck } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "wouter";
 
 export default function Parabens() {
+  const [userData, setUserData] = useState<{ nome: string; winnerNumber: number } | null>(null);
+  
+  useEffect(() => {
+    const data = sessionStorage.getItem("userData");
+    if (data) {
+      setUserData(JSON.parse(data));
+    }
+  }, []);
+  
+  // Pegar primeiro nome
+  const firstName = userData?.nome?.split(" ")[0] || "Torcedor";
+  const winnerNumber = userData?.winnerNumber || 2971;
+  
   return (
     <div className="min-h-screen bg-[#F5F5F5] flex flex-col font-sans">
       <Header />
@@ -17,9 +31,9 @@ export default function Parabens() {
               <CheckCircle size={48} className="text-green-600" />
             </div>
           </div>
-          <h1 className="text-2xl font-bold text-green-800 mb-2">PARABÉNS! VOCÊ GANHOU!</h1>
+          <h1 className="text-2xl font-bold text-green-800 mb-2">PARABÉNS, {firstName.toUpperCase()}! 🎉</h1>
           <p className="text-green-700">
-            Você foi selecionado na nossa campanha oficial e ganhou uma camisa oficial do Flamengo totalmente grátis!
+            Você é o ganhador <span className="font-bold">#{winnerNumber}</span> de 3.000 e ganhou uma camisa oficial do Flamengo totalmente grátis!
           </p>
           <p className="text-sm text-green-600 mt-2 font-medium">
             Escolha seu modelo abaixo para resgatar agora mesmo.

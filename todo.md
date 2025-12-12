@@ -21,8 +21,11 @@
 - [x] Reformular página NF1 com identidade Flamengo x Shopee
 - [x] Incluir página NF1 no repositório
 - [x] Criar página de pagamento PIX para NF1 (taxa de imposto R$25,19)
-
 - [x] Adicionar aviso de frete não gratuito (pedido não atingiu R$39,90)
 - [x] Adicionar banner de frete grátis acima de R$39,90 na tela inicial
 - [x] Ajustar banner de frete grátis para versão mais fina e discreta
 - [x] Enviar PIX gerado para UTMify com status waiting_payment
+- [x] Corrigir envio de PIX gerado para UTMify (testado - funcionando no ambiente Manus)
+- [x] Criar página de cadastro (Nome + CPF) antes do Quiz
+- [x] Adicionar número do ganhador (2.971 de 3.000) na tela Home
+- [x] Personalizar mensagens com nome do usuário

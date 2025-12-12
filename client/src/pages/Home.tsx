@@ -1,17 +1,53 @@
 import { Header } from "@/components/Header";
 import { Card, CardContent } from "@/components/ui/card";
 import { useUTM } from "@/hooks/useUTM";
-import { ChevronRight, Package, Star, Truck } from "lucide-react";
+import { ChevronRight, Gift, Package, Star, Trophy, Truck } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Link } from "wouter";
 
 export default function Home() {
   // Capture UTM params on page load
   useUTM();
+  
+  const [userData, setUserData] = useState<{ nome: string; winnerNumber: number } | null>(null);
+  
+  useEffect(() => {
+    const data = sessionStorage.getItem("userData");
+    if (data) {
+      setUserData(JSON.parse(data));
+    }
+  }, []);
+  
+  // Pegar primeiro nome
+  const firstName = userData?.nome?.split(" ")[0] || "Torcedor";
+  const winnerNumber = userData?.winnerNumber || 2971;
+  
   return (
     <div className="min-h-screen bg-[#F5F5F5] flex flex-col font-sans">
       <Header />
       
       <main className="container mx-auto px-4 py-6 flex-1">
+        {/* Banner de Parabéns - Ganhador */}
+        <div className="bg-gradient-to-r from-[#C4161C] to-[#8B0000] rounded-lg p-4 mb-4 shadow-lg">
+          <div className="flex items-center gap-3">
+            <div className="bg-yellow-400 p-2 rounded-full shrink-0">
+              <Trophy className="w-6 h-6 text-[#8B0000]" />
+            </div>
+            <div className="flex-1">
+              <p className="text-yellow-400 font-bold text-lg">
+                Parabéns, {firstName}! 🎉
+              </p>
+              <p className="text-white text-sm">
+                Você é o ganhador <span className="font-bold text-yellow-400">#{winnerNumber}</span> de <span className="font-bold">3.000</span>
+              </p>
+            </div>
+          </div>
+          <div className="mt-3 bg-white/10 rounded p-2 flex items-center justify-center gap-2">
+            <Gift className="w-4 h-4 text-yellow-400" />
+            <span className="text-white text-xs">Restam apenas <span className="font-bold text-yellow-400">{3000 - winnerNumber}</span> camisetas!</span>
+          </div>
+        </div>
+
         {/* Banner Principal */}
         <div className="w-full rounded-lg overflow-hidden shadow-md mb-6 bg-black">
           <img 

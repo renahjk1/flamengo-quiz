@@ -9,7 +9,7 @@ export default function Start() {
   useUTM();
 
   const handleStart = () => {
-    setLocation("/quiz");
+    setLocation("/cadastro");
   };
 
   return (
