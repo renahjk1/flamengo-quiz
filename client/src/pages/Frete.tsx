@@ -14,7 +14,7 @@ export default function Frete() {
       id: "sedex",
       name: "CORREIOS SEDEX",
       time: "1 a 3 dias úteis",
-      price: "37,50",
+      price: "39,00",
       icon: "/images/correios-logo.png" // Placeholder, usaremos ícone genérico se não tiver imagem
     },
     {
