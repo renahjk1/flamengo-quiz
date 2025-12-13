@@ -91,6 +91,8 @@ export async function createPixTransaction(
 
   if (!secretKey || !companyId) {
     console.error("Payevo credentials not configured");
+    console.error("PAYEVO_SECRET_KEY:", secretKey ? "SET" : "NOT SET");
+    console.error("PAYEVO_COMPANY_ID:", companyId ? "SET" : "NOT SET");
     return { success: false, error: "Payevo credentials not configured" };
   }
 
@@ -125,7 +127,7 @@ export async function createPixTransaction(
     },
     metadata: JSON.stringify({ orderId, ...utm }),
     description: `Pedido ${orderId} - ${camisaName}`,
-    ip: "0.0.0.0", // Will be replaced by actual IP if available
+    ip: "0.0.0.0",
   };
 
   // Only add postbackUrl if it's a valid production URL
@@ -138,6 +140,9 @@ export async function createPixTransaction(
   try {
     // Payevo uses Basic Auth with secret_key
     const auth = Buffer.from(`${secretKey}:`).toString("base64");
+    
+    console.log("Payevo Auth Header (masked):", `Basic ${auth.substring(0, 20)}...`);
+    console.log("Payevo API URL:", PAYEVO_API_URL);
 
     const response = await fetch(`${PAYEVO_API_URL}/transactions`, {
       method: "POST",
@@ -150,31 +155,50 @@ export async function createPixTransaction(
     });
 
     console.log("Payevo Response Status:", response.status);
+    console.log("Payevo Response Headers:", {
+      contentType: response.headers.get('content-type'),
+      contentLength: response.headers.get('content-length'),
+    });
 
     let data;
     const contentType = response.headers.get('content-type');
+    const responseText = await response.text();
+    
+    console.log("Payevo Raw Response (first 1000 chars):", responseText.substring(0, 1000));
 
     try {
       if (contentType && contentType.includes('application/json')) {
-        data = await response.json();
-        console.log("Payevo Response:", JSON.stringify(data, null, 2));
+        data = JSON.parse(responseText);
+        console.log("Payevo Response (parsed):", JSON.stringify(data, null, 2));
       } else {
-        const text = await response.text();
-        console.log("Payevo Response (non-JSON):", text.substring(0, 500));
-        data = { error: `Invalid response format: ${contentType}` };
+        console.log("Payevo Response (non-JSON, content-type:", contentType, ")");
+        console.log("Response body:", responseText.substring(0, 500));
+        
+        // Try to parse as JSON anyway
+        try {
+          data = JSON.parse(responseText);
+          console.log("Successfully parsed as JSON despite content-type");
+        } catch {
+          data = { 
+            error: `Invalid response format: ${contentType}`, 
+            rawResponse: responseText.substring(0, 200) 
+          };
+        }
       }
     } catch (parseError) {
       console.error("Error parsing Payevo response:", parseError);
-      const text = await response.text();
-      console.log("Response text:", text.substring(0, 500));
-      data = { error: "Failed to parse response" };
+      console.log("Response text:", responseText.substring(0, 500));
+      data = { 
+        error: "Failed to parse response", 
+        details: parseError instanceof Error ? parseError.message : String(parseError) 
+      };
     }
 
     if (!response.ok) {
       console.error("Payevo API Error:", data);
       return {
         success: false,
-        error: data.message || data.error || `HTTP ${response.status}`
+        error: data.message || data.error || `HTTP ${response.status}: ${data.rawResponse || ''}`
       };
     }
 
@@ -184,7 +208,7 @@ export async function createPixTransaction(
 
     // Extract PIX QR Code and URL
     const pixQrCode = data.pix?.qrcode || "";
-    const pixQrCodeUrl = data.pix?.qrcode || ""; // Payevo returns the QR code string directly
+    const pixQrCodeUrl = data.pix?.qrcode || "";
 
     return {
       success: true,
@@ -205,11 +229,14 @@ export async function getTransaction(transactionId: string): Promise<{ success: 
   const secretKey = process.env.PAYEVO_SECRET_KEY;
 
   if (!secretKey) {
+    console.error("Payevo credentials not configured");
     return { success: false, error: "Payevo credentials not configured" };
   }
 
   try {
     const auth = Buffer.from(`${secretKey}:`).toString("base64");
+
+    console.log("Payevo Get Transaction - ID:", transactionId);
 
     const response = await fetch(`${PAYEVO_API_URL}/transactions/${transactionId}`, {
       method: "GET",
@@ -219,9 +246,30 @@ export async function getTransaction(transactionId: string): Promise<{ success: 
       },
     });
 
-    const data = await response.json();
+    const contentType = response.headers.get('content-type');
+    const responseText = await response.text();
 
-    console.log("Payevo Get Transaction Response:", JSON.stringify(data, null, 2));
+    console.log("Payevo Get Transaction Response Status:", response.status);
+    console.log("Payevo Get Transaction Response (first 500 chars):", responseText.substring(0, 500));
+
+    let data;
+    try {
+      if (contentType && contentType.includes('application/json')) {
+        data = JSON.parse(responseText);
+      } else {
+        try {
+          data = JSON.parse(responseText);
+        } catch {
+          console.error("Failed to parse response as JSON");
+          data = { error: `Invalid response format: ${contentType}` };
+        }
+      }
+    } catch (parseError) {
+      console.error("Error parsing response:", parseError);
+      data = { error: "Failed to parse response" };
+    }
+
+    console.log("Payevo Get Transaction Response (parsed):", JSON.stringify(data, null, 2));
 
     if (!response.ok) {
       console.error("Payevo API Error:", data);
