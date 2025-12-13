@@ -42,63 +42,81 @@ export async function handlePayevoWebhook(req: Request, res: Response) {
     const transactionId = String(payload.data.id);
     const status = payload.data.status;
 
-    // Find transaction in database
-    const transaction = await getTransactionByTransactionId(transactionId);
-
-    if (!transaction) {
-      console.warn(`Transaction ${transactionId} not found in database`);
-      // Still return 200 to acknowledge receipt
-      return res.status(200).json({ success: true, message: "Transaction not found" });
-    }
-
     console.log(`Processing webhook for transaction ${transactionId}, status: ${status}`);
 
-    // Update transaction status in database
-    await updateTransactionStatus(transactionId, status, status === "paid" ? new Date(payload.data.paidAt || new Date()) : undefined);
+    // Only process paid transactions
+    if (status !== "paid") {
+      console.log(`Ignoring webhook with status: ${status}. Only processing 'paid' status.`);
+      return res.status(200).json({ success: true, message: "Non-paid status ignored" });
+    }
 
-    // If payment was confirmed, send conversion to Utmify
-    if (status === "paid" && !transaction.utmifySent) {
-      try {
-        console.log(`Sending paid conversion to Utmify for order ${transaction.orderId}`);
+    // Try to update transaction status in database (optional)
+    try {
+      await updateTransactionStatus(transactionId, status, new Date(payload.data.paidAt || new Date()));
+      console.log(`Transaction status updated in database: ${transactionId}`);
+    } catch (dbError) {
+      console.warn(`Database not available for updating transaction: ${transactionId}`);
+      // Continue anyway - we'll still send to UTMify
+    }
 
-        const result = await sendConversionToUtmify({
-          orderId: transaction.orderId,
-          transactionId: transaction.transactionId,
-          amount: transaction.amount / 100, // Convert from cents to reais
-          customer: {
-            name: transaction.customerName,
-            email: transaction.customerEmail,
-            phone: transaction.customerPhone,
-            cpf: transaction.customerCpf,
-          },
-          product: {
-            name: transaction.productName,
-            price: transaction.productPrice / 100, // Convert from cents to reais
-            quantity: transaction.productQuantity,
-          },
-          utm: {
-            utm_source: transaction.utmSource || undefined,
-            utm_medium: transaction.utmMedium || undefined,
-            utm_campaign: transaction.utmCampaign || undefined,
-            utm_term: transaction.utmTerm || undefined,
-            utm_content: transaction.utmContent || undefined,
-            src: transaction.src || undefined,
-            sck: transaction.sck || undefined,
-          },
-          paymentMethod: transaction.paymentMethod,
-          status: "paid",
-        });
-
-        if (result.success) {
-          await markUtmifySent(transactionId);
-          console.log(`Successfully sent paid conversion to Utmify for order ${transaction.orderId}`);
-        } else {
-          console.error(`Failed to send conversion to Utmify: ${result.error}`);
-        }
-      } catch (utmifyError) {
-        console.error("Error sending conversion to Utmify:", utmifyError);
-        // Don't fail the webhook response, just log the error
+    // Send conversion to Utmify for paid transactions
+    // Extract metadata to get orderId and UTM parameters
+    let metadata: any = {};
+    try {
+      if (payload.data.metadata) {
+        metadata = JSON.parse(payload.data.metadata);
       }
+    } catch (parseError) {
+      console.warn("Failed to parse metadata:", parseError);
+    }
+
+    const orderId = metadata.orderId || transactionId;
+
+    try {
+      console.log(`Sending paid conversion to Utmify for order ${orderId}`);
+
+      const result = await sendConversionToUtmify({
+        orderId: orderId,
+        transactionId: transactionId,
+        amount: payload.data.amount / 100, // Convert from centavos to reais
+        customer: {
+          name: payload.data.customer?.name || "Cliente",
+          email: payload.data.customer?.email || "cliente@email.com",
+          phone: payload.data.customer?.phone || "",
+          cpf: payload.data.customer?.cpf || "",
+        },
+        product: {
+          name: "Produto",
+          price: payload.data.amount / 100,
+          quantity: 1,
+        },
+        utm: {
+          utm_source: metadata.utm_source || undefined,
+          utm_medium: metadata.utm_medium || undefined,
+          utm_campaign: metadata.utm_campaign || undefined,
+          utm_term: metadata.utm_term || undefined,
+          utm_content: metadata.utm_content || undefined,
+          src: metadata.src || undefined,
+          sck: metadata.sck || undefined,
+        },
+        paymentMethod: "pix",
+        status: "paid",
+      });
+
+      if (result.success) {
+        // Try to mark as sent in database (optional)
+        try {
+          await markUtmifySent(transactionId);
+          console.log(`Successfully sent paid conversion to Utmify for order ${orderId}`);
+        } catch (dbError) {
+          console.warn(`Database not available for marking UTMify as sent, but conversion was sent successfully`);
+        }
+      } else {
+        console.error(`Failed to send conversion to Utmify: ${result.error}`);
+      }
+    } catch (utmifyError) {
+      console.error("Error sending conversion to Utmify:", utmifyError);
+      // Don't fail the webhook response, just log the error
     }
 
     return res.status(200).json({ success: true, message: "Webhook processed successfully" });

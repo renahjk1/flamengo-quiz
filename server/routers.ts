@@ -78,7 +78,7 @@ export const appRouter = router({
             };
           }
 
-          // Save transaction to database
+          // Save transaction to database (optional - if database is available)
           try {
             await createTransaction({
               orderId: orderId,
@@ -104,29 +104,12 @@ export const appRouter = router({
             });
             console.log('Transaction saved to database:', orderId);
           } catch (dbError) {
-            console.error('Error saving transaction to database:', dbError);
+            console.warn('Database not available - continuing without saving transaction:', dbError instanceof Error ? dbError.message : String(dbError));
           }
 
-          // Send to UTMify with waiting_payment status
-          try {
-            await sendConversionToUtmify({
-              orderId: orderId,
-              transactionId: result.transactionId || '',
-              amount: input.freteValue,
-              customer: input.customer,
-              product: {
-                name: input.camisaName,
-                price: input.freteValue,
-                quantity: 1,
-              },
-              utm: input.utm,
-              paymentMethod: 'pix',
-              status: 'waiting_payment',
-            });
-            console.log('UTMify: PIX gerado enviado com sucesso');
-          } catch (utmifyError) {
-            console.error('UTMify error (non-blocking):', utmifyError);
-          }
+          // Do NOT send to UTMify when PIX is generated
+          // Wait for webhook with status 'paid' to send to UTMify
+          console.log('PIX gerado com sucesso. Aguardando confirmação de pagamento...');
 
           return {
             success: true,
