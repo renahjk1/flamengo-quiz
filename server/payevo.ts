@@ -102,8 +102,16 @@ export async function createPixTransaction(
   // Clean phone - remove non-numeric characters
   const cleanPhone = (customer?.phone || "11999999999").replace(/\D/g, "");
 
-  // Clean CPF - remove non-numeric characters
-  const cleanCpf = (customer?.cpf || "00000000000").replace(/\D/g, "");
+  // Clean CPF - remove non-numeric characters and validate
+  let cleanCpf = (customer?.cpf || "").replace(/\D/g, "");
+  
+  // If CPF is empty or invalid, use a placeholder
+  if (!cleanCpf || cleanCpf.length < 11) {
+    console.warn("Invalid CPF provided:", cleanCpf, "length:", cleanCpf.length);
+    cleanCpf = "00000000000";
+  }
+  
+  console.log("Payevo Customer CPF (masked):", cleanCpf.substring(0, 3) + "***" + cleanCpf.substring(9));
 
   const requestBody: any = {
     amount: amountInCentavos,
@@ -120,6 +128,7 @@ export async function createPixTransaction(
         quantity: 1,
         unitPrice: amountInCentavos,
         externalRef: orderId,
+        tangible: true,
       },
     ],
     pix: {
@@ -130,12 +139,32 @@ export async function createPixTransaction(
     ip: "0.0.0.0",
   };
 
+  // Add shipping address if provided
+  if (address) {
+    requestBody.shipping = {
+      street: address.street,
+      number: address.number,
+      complement: address.complement || "",
+      neighborhood: address.neighborhood,
+      city: address.city,
+      state: address.state,
+      zipCode: address.cep,
+    };
+    console.log("Payevo Shipping address added");
+  }
+
   // Only add postbackUrl if it's a valid production URL
   if (webhookUrl && !webhookUrl.includes('localhost') && webhookUrl.startsWith('https://')) {
     requestBody.postbackUrl = webhookUrl;
+    console.log("Payevo Webhook URL configured:", webhookUrl);
   }
 
-  console.log("Payevo Request Body:", JSON.stringify(requestBody, null, 2));
+  // Log request body with masked sensitive data
+  const logBody = JSON.parse(JSON.stringify(requestBody));
+  if (logBody.customer?.cpf) {
+    logBody.customer.cpf = logBody.customer.cpf.substring(0, 3) + "***" + logBody.customer.cpf.substring(9);
+  }
+  console.log("Payevo Request Body:", JSON.stringify(logBody, null, 2));
 
   try {
     // Payevo uses Basic Auth with secret_key
