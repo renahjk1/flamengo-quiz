@@ -72,36 +72,47 @@ export async function handlePayevoWebhook(req: Request, res: Response) {
 
     const orderId = metadata.orderId || transactionId;
 
+    // Try to get transaction from database for more details
+    let transaction = null;
+    try {
+      transaction = await getTransactionByTransactionId(transactionId);
+    } catch (dbError) {
+      console.warn(`Database not available for getting transaction details`);
+    }
+
     try {
       console.log(`Sending paid conversion to Utmify for order ${orderId}`);
 
-      const result = await sendConversionToUtmify({
+      // Use database data if available, otherwise use webhook data
+      const utmifyData = {
         orderId: orderId,
         transactionId: transactionId,
-        amount: payload.data.amount / 100, // Convert from centavos to reais
+        amount: transaction?.amount ? transaction.amount / 100 : payload.data.amount / 100,
         customer: {
-          name: payload.data.customer?.name || "Cliente",
-          email: payload.data.customer?.email || "cliente@email.com",
-          phone: payload.data.customer?.phone || "",
-          cpf: payload.data.customer?.cpf || "",
+          name: transaction?.customerName || payload.data.customer?.name || "Cliente",
+          email: transaction?.customerEmail || payload.data.customer?.email || "cliente@email.com",
+          phone: transaction?.customerPhone || payload.data.customer?.phone || "",
+          cpf: transaction?.customerCpf || payload.data.customer?.cpf || "",
         },
         product: {
-          name: "Produto",
-          price: payload.data.amount / 100,
-          quantity: 1,
+          name: transaction?.productName || "Produto",
+          price: transaction?.productPrice ? transaction.productPrice / 100 : payload.data.amount / 100,
+          quantity: transaction?.productQuantity || 1,
         },
         utm: {
-          utm_source: metadata.utm_source || undefined,
-          utm_medium: metadata.utm_medium || undefined,
-          utm_campaign: metadata.utm_campaign || undefined,
-          utm_term: metadata.utm_term || undefined,
-          utm_content: metadata.utm_content || undefined,
-          src: metadata.src || undefined,
-          sck: metadata.sck || undefined,
+          utm_source: transaction?.utmSource || metadata.utm_source || undefined,
+          utm_medium: transaction?.utmMedium || metadata.utm_medium || undefined,
+          utm_campaign: transaction?.utmCampaign || metadata.utm_campaign || undefined,
+          utm_term: transaction?.utmTerm || metadata.utm_term || undefined,
+          utm_content: transaction?.utmContent || metadata.utm_content || undefined,
+          src: transaction?.src || metadata.src || undefined,
+          sck: transaction?.sck || metadata.sck || undefined,
         },
-        paymentMethod: "pix",
+        paymentMethod: transaction?.paymentMethod || "pix",
         status: "paid",
-      });
+      };
+
+      const result = await sendConversionToUtmify(utmifyData);
 
       if (result.success) {
         // Try to mark as sent in database (optional)

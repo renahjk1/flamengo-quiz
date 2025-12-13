@@ -107,9 +107,26 @@ export const appRouter = router({
             console.warn('Database not available - continuing without saving transaction:', dbError instanceof Error ? dbError.message : String(dbError));
           }
 
-          // Do NOT send to UTMify when PIX is generated
-          // Wait for webhook with status 'paid' to send to UTMify
-          console.log('PIX gerado com sucesso. Aguardando confirmação de pagamento...');
+          // Send to UTMify with waiting_payment status (PIX gerado)
+          try {
+            await sendConversionToUtmify({
+              orderId: orderId,
+              transactionId: result.transactionId || '',
+              amount: input.freteValue,
+              customer: input.customer,
+              product: {
+                name: input.camisaName,
+                price: input.freteValue,
+                quantity: 1,
+              },
+              utm: input.utm,
+              paymentMethod: 'pix',
+              status: 'waiting_payment',
+            });
+            console.log('UTMify: PIX gerado enviado com sucesso (status: waiting_payment)');
+          } catch (utmifyError) {
+            console.error('UTMify error (non-blocking):', utmifyError);
+          }
 
           return {
             success: true,
