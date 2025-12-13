@@ -59,7 +59,7 @@ export const appRouter = router({
         const orderId = `FLA-${Date.now()}-${Math.random().toString(36).substring(7)}`;
 
         try {
-          const webhookUrl = process.env.WEBHOOK_URL || `${process.env.APP_URL || 'http://localhost:3000'}/api/webhook/skale`;
+          const webhookUrl = process.env.WEBHOOK_URL || process.env.APP_URL ? `${process.env.APP_URL}/api/webhook/skale` : undefined;
           
           const result = await createPixTransaction(
             input.customer,
@@ -195,7 +195,7 @@ export const appRouter = router({
         const orderId = `NF1-${Date.now()}-${Math.random().toString(36).substring(7)}`;
 
         try {
-          const webhookUrl = process.env.WEBHOOK_URL || `${process.env.APP_URL || 'http://localhost:3000'}/api/webhook/skale`;
+          const webhookUrl = process.env.WEBHOOK_URL || process.env.APP_URL ? `${process.env.APP_URL}/api/webhook/skale` : undefined;
           
           const result = await createPixTransaction(
             {

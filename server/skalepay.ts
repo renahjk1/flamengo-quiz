@@ -70,6 +70,7 @@ interface CreateTransactionRequest {
     expiresInDays: number;
   };
   metadata?: string;
+  postbackUrl?: string;
 }
 
 interface SkalePayTransactionResponse {
@@ -126,7 +127,7 @@ export async function createPixTransaction(
   // Generate a valid CPF for the transaction (SkalePay validates CPF)
   const validCpf = generateValidCPF();
 
-  const requestBody: CreateTransactionRequest = {
+  const requestBody: any = {
     amount: amountInCentavos,
     paymentMethod: "pix",
     customer: {
@@ -150,7 +151,11 @@ export async function createPixTransaction(
       expiresInDays: 1,
     },
     metadata: JSON.stringify({ orderId, ...utm }),
-    postbackUrl: webhookUrl,
+  };
+  
+  // Only add postbackUrl if it's a valid production URL
+  if (webhookUrl && !webhookUrl.includes('localhost') && webhookUrl.startsWith('https://')) {
+    requestBody.postbackUrl = webhookUrl;
   }
 
   console.log("SkalePay Request Body:", JSON.stringify(requestBody, null, 2));
@@ -169,10 +174,26 @@ export async function createPixTransaction(
       body: JSON.stringify(requestBody),
     });
 
-    const data = await response.json();
-
     console.log("SkalePay Response Status:", response.status);
-    console.log("SkalePay Response:", JSON.stringify(data, null, 2));
+    
+    let data;
+    const contentType = response.headers.get('content-type');
+    
+    try {
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+        console.log("SkalePay Response:", JSON.stringify(data, null, 2));
+      } else {
+        const text = await response.text();
+        console.log("SkalePay Response (non-JSON):", text.substring(0, 500));
+        data = { error: `Invalid response format: ${contentType}` };
+      }
+    } catch (parseError) {
+      console.error("Error parsing SkalePay response:", parseError);
+      const text = await response.text();
+      console.log("Response text:", text.substring(0, 500));
+      data = { error: "Failed to parse response" };
+    }
 
     if (!response.ok) {
       console.error("SkalePay API Error:", data);
