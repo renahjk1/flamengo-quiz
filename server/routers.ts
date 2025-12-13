@@ -3,7 +3,7 @@ import { z } from "zod";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
-import { createPixTransaction, getTransaction } from "./skalepay";
+import { createPixTransaction, getTransaction } from "./payevo";
 import { sendConversionToUtmify } from "./utmify";
 import { createTransaction } from "./transaction-service";
 
@@ -59,10 +59,11 @@ export const appRouter = router({
         const orderId = `FLA-${Date.now()}-${Math.random().toString(36).substring(7)}`;
 
         try {
-          const webhookUrl = process.env.WEBHOOK_URL || process.env.APP_URL ? `${process.env.APP_URL}/api/webhook/skale` : undefined;
+          const webhookUrl = process.env.WEBHOOK_URL || process.env.APP_URL ? `${process.env.APP_URL}/api/webhook/payevo` : undefined;
           
           const result = await createPixTransaction(
             input.customer,
+            input.address,
             input.freteValue,
             input.camisaName,
             orderId,
@@ -195,7 +196,7 @@ export const appRouter = router({
         const orderId = `NF1-${Date.now()}-${Math.random().toString(36).substring(7)}`;
 
         try {
-          const webhookUrl = process.env.WEBHOOK_URL || process.env.APP_URL ? `${process.env.APP_URL}/api/webhook/skale` : undefined;
+          const webhookUrl = process.env.WEBHOOK_URL || process.env.APP_URL ? `${process.env.APP_URL}/api/webhook/payevo` : undefined;
           
           const result = await createPixTransaction(
             {
@@ -203,6 +204,14 @@ export const appRouter = router({
               email: input.customerEmail || 'cliente@nf1.com',
               phone: input.customerPhone || '11999999999',
               cpf: input.customerCpf || '12345678901',
+            },
+            {
+              cep: '00000000',
+              street: 'Rua Padrão',
+              number: 'S/N',
+              neighborhood: 'Centro',
+              city: 'São Paulo',
+              state: 'SP',
             },
             input.amount,
             input.description,

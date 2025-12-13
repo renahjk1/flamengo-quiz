@@ -8,6 +8,7 @@ import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { handleSkaleWebhook } from "../webhook-handler";
+import { handlePayevoWebhook } from "../payevo-webhook-handler";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -39,6 +40,9 @@ async function startServer() {
   
   // Webhook endpoint for Skale payment notifications
   app.post("/api/webhook/skale", handleSkaleWebhook);
+  
+  // Webhook endpoint for Payevo payment notifications
+  app.post("/api/webhook/payevo", handlePayevoWebhook);
   
   // tRPC API
   app.use(
