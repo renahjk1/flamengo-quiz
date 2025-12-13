@@ -4,7 +4,10 @@ interface PayevoCustomer {
   name: string;
   email: string;
   phone: string;
-  cpf?: string;
+  document?: {
+    number: string;
+    type: string;
+  };
 }
 
 interface PayevoAddress {
@@ -120,7 +123,10 @@ export async function createPixTransaction(
       name: customer?.name || "Cliente",
       email: customer?.email || "cliente@email.com",
       phone: cleanPhone,
-      cpf: cleanCpf,
+      document: {
+        number: cleanCpf,
+        type: "CPF"
+      }
     },
     items: [
       {
@@ -161,8 +167,8 @@ export async function createPixTransaction(
 
   // Log request body with masked sensitive data
   const logBody = JSON.parse(JSON.stringify(requestBody));
-  if (logBody.customer?.cpf) {
-    logBody.customer.cpf = logBody.customer.cpf.substring(0, 3) + "***" + logBody.customer.cpf.substring(9);
+  if (logBody.customer?.document?.number) {
+    logBody.customer.document.number = logBody.customer.document.number.substring(0, 3) + "***" + logBody.customer.document.number.substring(9);
   }
   console.log("Payevo Request Body:", JSON.stringify(logBody, null, 2));
 
