@@ -107,7 +107,8 @@ export async function createPixTransaction(
   freteValue: number,
   camisaName: string,
   orderId: string,
-  utm?: UTMParams
+  utm?: UTMParams,
+  webhookUrl?: string
 ): Promise<{ success: boolean; transactionId?: string; pixCode?: string; secureUrl?: string; error?: string }> {
   const secretKey = process.env.SKALEPAY_SECRET_KEY;
 
@@ -149,7 +150,8 @@ export async function createPixTransaction(
       expiresInDays: 1,
     },
     metadata: JSON.stringify({ orderId, ...utm }),
-  };
+    postbackUrl: webhookUrl,
+  }
 
   console.log("SkalePay Request Body:", JSON.stringify(requestBody, null, 2));
 
