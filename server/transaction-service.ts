@@ -1,9 +1,14 @@
-import { db } from "./db";
-import { transactions, InsertTransaction, Transaction } from "@/drizzle/schema";
+import { getDb } from "./db";
+import { transactions, InsertTransaction, Transaction } from "../drizzle/schema";
 import { eq } from "drizzle-orm";
 
 export async function createTransaction(data: InsertTransaction): Promise<Transaction> {
-  const result = await db.insert(transactions).values(data);
+  const db = await getDb();
+  if (!db) {
+    throw new Error("Database not available");
+  }
+  
+  await db.insert(transactions).values(data);
   const created = await db.query.transactions.findFirst({
     where: eq(transactions.orderId, data.orderId),
   });
@@ -14,12 +19,24 @@ export async function createTransaction(data: InsertTransaction): Promise<Transa
 }
 
 export async function getTransactionByOrderId(orderId: string): Promise<Transaction | undefined> {
+  const db = await getDb();
+  if (!db) {
+    console.warn("Database not available");
+    return undefined;
+  }
+  
   return db.query.transactions.findFirst({
     where: eq(transactions.orderId, orderId),
   });
 }
 
 export async function getTransactionByTransactionId(transactionId: string): Promise<Transaction | undefined> {
+  const db = await getDb();
+  if (!db) {
+    console.warn("Database not available");
+    return undefined;
+  }
+  
   return db.query.transactions.findFirst({
     where: eq(transactions.transactionId, transactionId),
   });
@@ -30,6 +47,12 @@ export async function updateTransactionStatus(
   status: "waiting_payment" | "paid" | "refused" | "refunded" | "chargedback",
   paidAt?: Date
 ): Promise<Transaction | undefined> {
+  const db = await getDb();
+  if (!db) {
+    console.warn("Database not available");
+    return undefined;
+  }
+  
   const updateData: any = { status, updatedAt: new Date() };
   if (status === "paid" && paidAt) {
     updateData.paidAt = paidAt;
@@ -43,5 +66,11 @@ export async function updateTransactionStatus(
 }
 
 export async function markUtmifySent(transactionId: string): Promise<void> {
+  const db = await getDb();
+  if (!db) {
+    console.warn("Database not available");
+    return;
+  }
+  
   await db.update(transactions).set({ utmifySent: 1 }).where(eq(transactions.transactionId, transactionId));
 }
