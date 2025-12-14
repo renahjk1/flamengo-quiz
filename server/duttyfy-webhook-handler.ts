@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { sendConversionToUtmify } from "./utmify";
-import { updateTransaction } from "./transaction-service";
+import { updateTransactionStatus } from "./transaction-service";
 
 interface DuttyfyWebhookPayload {
   transactionId: string;
@@ -36,10 +36,11 @@ export async function handleDuttyfyWebhook(req: Request, res: Response) {
 
     // Update transaction status in database
     try {
-      await updateTransaction(payload.transactionId, {
-        status: "paid",
-        paidAt: new Date(payload.paidAt || Date.now()),
-      });
+      await updateTransactionStatus(
+        payload.transactionId,
+        "paid",
+        new Date(payload.paidAt || Date.now())
+      );
       console.log("Transaction updated in database:", payload.transactionId);
     } catch (dbError) {
       console.error("Error updating transaction in database:", dbError);
