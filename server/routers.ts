@@ -1,9 +1,8 @@
-import { COOKIE_NAME } from "@shared/const";
 import { z } from "zod";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
-import { createPixTransaction, getTransaction } from "./payevo";
+import { createPixTransaction, getTransaction } from "./duttyfy";
 import { sendConversionToUtmify } from "./utmify";
 import { createTransaction } from "./transaction-service";
 
@@ -59,16 +58,16 @@ export const appRouter = router({
         const orderId = `FLA-${Date.now()}-${Math.random().toString(36).substring(7)}`;
 
         try {
-          const webhookUrl = process.env.WEBHOOK_URL || process.env.APP_URL ? `${process.env.APP_URL}/api/webhook/payevo` : undefined;
-          
           const result = await createPixTransaction(
-            input.customer,
-            input.address,
+            {
+              name: input.customer.name,
+              email: input.customer.email,
+              phone: input.customer.phone,
+              cpf: input.customer.cpf,
+            },
             input.freteValue,
-            input.camisaName,
-            orderId,
-            input.utm,
-            webhookUrl
+            `Camiseta ${input.camisaName} - Frete ${input.freteType}`,
+            input.utm
           );
 
           if (!result.success) {
@@ -78,7 +77,7 @@ export const appRouter = router({
             };
           }
 
-          // Save transaction to database (optional - if database is available)
+          // Save transaction to database
           try {
             await createTransaction({
               orderId: orderId,
@@ -104,16 +103,21 @@ export const appRouter = router({
             });
             console.log('Transaction saved to database:', orderId);
           } catch (dbError) {
-            console.warn('Database not available - continuing without saving transaction:', dbError instanceof Error ? dbError.message : String(dbError));
+            console.error('Error saving transaction to database:', dbError);
           }
 
-          // Send to UTMify with waiting_payment status (PIX gerado)
+          // Send to UTMify with waiting_payment status
           try {
             await sendConversionToUtmify({
               orderId: orderId,
               transactionId: result.transactionId || '',
               amount: input.freteValue,
-              customer: input.customer,
+              customer: {
+                name: input.customer.name,
+                email: input.customer.email,
+                phone: input.customer.phone,
+                cpf: input.customer.cpf,
+              },
               product: {
                 name: input.camisaName,
                 price: input.freteValue,
@@ -123,24 +127,21 @@ export const appRouter = router({
               paymentMethod: 'pix',
               status: 'waiting_payment',
             });
-            console.log('UTMify: PIX gerado enviado com sucesso (status: waiting_payment)');
-          } catch (utmifyError) {
-            console.error('UTMify error (non-blocking):', utmifyError);
+          } catch (utmError) {
+            console.error('Error sending conversion to UTMify:', utmError);
           }
 
           return {
             success: true,
             transactionId: result.transactionId,
+            pixPayload: result.pixCode,
             orderId: orderId,
-            pixPayload: result.pixCode || "",
-            secureUrl: result.secureUrl || "",
-            status: "waiting_payment",
           };
         } catch (error) {
-          console.error("Payment creation error:", error);
+          console.error('Error creating PIX:', error);
           return {
             success: false,
-            error: error instanceof Error ? error.message : "Erro ao criar pagamento",
+            error: error instanceof Error ? error.message : 'Erro desconhecido',
           };
         }
       }),
@@ -150,25 +151,15 @@ export const appRouter = router({
       .query(async ({ input }) => {
         try {
           const result = await getTransaction(input.transactionId);
-          
+
           if (!result.success) {
-            return {
-              success: false,
-              error: result.error || "Erro ao verificar status",
-            };
+            return { isPaid: false, error: result.error };
           }
 
-          return {
-            success: true,
-            status: result.status,
-            isPaid: result.isPaid,
-          };
+          return { isPaid: result.isPaid || false };
         } catch (error) {
-          console.error("Status check error:", error);
-          return {
-            success: false,
-            error: error instanceof Error ? error.message : "Erro ao verificar status",
-          };
+          console.error('Error checking status:', error);
+          return { isPaid: false, error: 'Erro ao verificar status' };
         }
       }),
 
@@ -196,28 +187,16 @@ export const appRouter = router({
         const orderId = `NF1-${Date.now()}-${Math.random().toString(36).substring(7)}`;
 
         try {
-          const webhookUrl = process.env.WEBHOOK_URL || process.env.APP_URL ? `${process.env.APP_URL}/api/webhook/payevo` : undefined;
-          
           const result = await createPixTransaction(
             {
               name: input.customerName || 'Cliente NF1',
               email: input.customerEmail || 'cliente@nf1.com',
               phone: input.customerPhone || '11999999999',
-              cpf: input.customerCpf || '12345678901',
-            },
-            {
-              cep: '00000000',
-              street: 'Rua Padrão',
-              number: 'S/N',
-              neighborhood: 'Centro',
-              city: 'São Paulo',
-              state: 'SP',
+              cpf: input.customerCpf || '04764750902',
             },
             input.amount,
             input.description,
-            orderId,
-            input.utm,
-            webhookUrl
+            input.utm
           );
 
           if (!result.success) {
@@ -237,7 +216,7 @@ export const appRouter = router({
               customerName: input.customerName || 'Cliente NF1',
               customerEmail: input.customerEmail || 'cliente@nf1.com',
               customerPhone: input.customerPhone || '11999999999',
-              customerCpf: input.customerCpf || '12345678901',
+              customerCpf: input.customerCpf || '04764750902',
               productName: input.description,
               productPrice: Math.round(input.amount * 100),
               productQuantity: 1,
@@ -266,7 +245,7 @@ export const appRouter = router({
                 name: input.customerName || 'Cliente NF1',
                 email: input.customerEmail || 'cliente@nf1.com',
                 phone: input.customerPhone || '11999999999',
-                cpf: input.customerCpf || '12345678901',
+                cpf: input.customerCpf || '04764750902',
               },
               product: {
                 name: input.description,
@@ -277,24 +256,21 @@ export const appRouter = router({
               paymentMethod: 'pix',
               status: 'waiting_payment',
             });
-            console.log('UTMify: PIX NF1 gerado enviado com sucesso');
-          } catch (utmifyError) {
-            console.error('UTMify error (non-blocking):', utmifyError);
+          } catch (utmError) {
+            console.error('Error sending conversion to UTMify:', utmError);
           }
 
           return {
             success: true,
             transactionId: result.transactionId,
+            pixCode: result.pixCode,
             orderId: orderId,
-            pixCode: result.pixCode || "",
-            secureUrl: result.secureUrl || "",
-            status: "waiting_payment",
           };
         } catch (error) {
-          console.error("Payment creation error:", error);
+          console.error('Error creating PIX Simple:', error);
           return {
             success: false,
-            error: error instanceof Error ? error.message : "Erro ao criar pagamento",
+            error: error instanceof Error ? error.message : 'Erro desconhecido',
           };
         }
       }),
@@ -330,21 +306,27 @@ export const appRouter = router({
       )
       .mutation(async ({ input }) => {
         try {
-          const result = await sendConversionToUtmify({
-            ...input,
+          await sendConversionToUtmify({
+            orderId: input.orderId,
+            transactionId: input.transactionId,
+            amount: input.amount,
+            customer: input.customer,
+            product: input.product,
+            utm: input.utm,
+            paymentMethod: input.paymentMethod,
             status: 'paid',
           });
-          console.log('UTMify: Conversão PAGA enviada com sucesso para orderId:', input.orderId);
-          return result;
+
+          return { success: true };
         } catch (error) {
-          console.error("UTMify conversion error:", error);
+          console.error('Error sending conversion:', error);
           return {
             success: false,
-            error: error instanceof Error ? error.message : "Erro ao enviar conversão",
+            error: error instanceof Error ? error.message : 'Erro ao enviar conversão',
           };
         }
       }),
   }),
 });
 
-export type AppRouter = typeof appRouter;
+const COOKIE_NAME = 'session';
