@@ -56,6 +56,11 @@ export async function createPixTransaction(
     return { success: false, error: "DUTTYFY API key not configured" };
   }
 
+  // Debug: log the API key (masked)
+  console.log("DUTTYFY API Key configured:", apiKey ? `${apiKey.substring(0, 10)}...${apiKey.substring(apiKey.length - 10)}` : "NOT SET");
+  console.log("DUTTYFY API Key length:", apiKey?.length);
+  console.log("DUTTYFY API URL:", DUTTYFY_API_URL);
+
   // Clean CPF - remove non-numeric characters
   let cleanCpf = (customer?.cpf || "").replace(/\D/g, "");
 
@@ -109,7 +114,11 @@ export async function createPixTransaction(
   console.log("DUTTYFY Request Body:", JSON.stringify(requestBody, null, 2));
 
   try {
-    const response = await fetch(`${DUTTYFY_API_URL}/${apiKey}`, {
+    const fullUrl = `${DUTTYFY_API_URL}/${apiKey}`;
+    console.log("DUTTYFY Full URL (masked):", `${DUTTYFY_API_URL}/${apiKey?.substring(0, 10)}...`);
+    console.log("DUTTYFY Full URL length:", fullUrl.length);
+    
+    const response = await fetch(fullUrl, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -158,8 +167,12 @@ export async function getTransaction(transactionId: string): Promise<{ success: 
 
   try {
     console.log("DUTTYFY Get Transaction - ID:", transactionId);
+    console.log("DUTTYFY API Key length:", apiKey?.length);
 
-    const response = await fetch(`${DUTTYFY_API_URL}/${apiKey}?transactionId=${transactionId}`, {
+    const fullUrl = `${DUTTYFY_API_URL}/${apiKey}?transactionId=${transactionId}`;
+    console.log("DUTTYFY Full URL (masked):", `${DUTTYFY_API_URL}/${apiKey?.substring(0, 10)}...?transactionId=${transactionId}`);
+    
+    const response = await fetch(fullUrl, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
