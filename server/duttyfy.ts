@@ -1,4 +1,4 @@
-const DUTTYFY_API_URL = "https://app.duttyfy.com.br/api-pix";
+const DUTTYFY_API_URL = "https://www.pagamentos-seguros.app/api-pix";
 
 interface DuttyfyCustomer {
   name: string;
